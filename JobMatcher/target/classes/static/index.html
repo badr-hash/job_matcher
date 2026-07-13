@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>JobMatcher | Connexion</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="assistant.css">
+    <style>
+        :root {
+            --linkedin-blue: #0a66c2;
+            --linkedin-blue-dark: #004182;
+            --linkedin-blue-light: #70b5f9;
+            --linkedin-text: rgba(0,0,0,0.9);
+            --linkedin-text-secondary: rgba(0,0,0,0.6);
+            --linkedin-bg: #f3f2ef;
+            --linkedin-white: #ffffff;
+            --linkedin-border: #d0d0d0;
+            --linkedin-gold: #e7a33e;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica Neue, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--linkedin-bg);
+            color: var(--linkedin-text);
+            font-size: 16px;
+            line-height: 1.5;
+            min-height: 100vh;
+        }
+
+        /* LinkedIn Header */
+        .linkedin-header {
+            background-color: var(--linkedin-white);
+            border-bottom: 1px solid rgba(0,0,0,0.08);
+            height: 52px;
+            padding: 0 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+        }
+
+        .linkedin-logo {
+            color: var(--linkedin-blue);
+            font-size: 24px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+        }
+
+        .linkedin-logo i {
+            margin-right: 8px;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+
+        .nav-link {
+            color: var(--linkedin-text-secondary);
+            font-size: 12px;
+            text-decoration: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: color 0.2s;
+        }
+
+        .nav-link:hover {
+            color: var(--linkedin-text);
+        }
+
+        .nav-link i {
+            font-size: 16px;
+            margin-bottom: 2px;
+        }
+
+        /* Main Layout */
+        .main-container {
+            max-width: 1128px;
+            margin: 0 auto;
+            padding: 0 24px;
+            display: flex;
+            align-items: center;
+            min-height: calc(100vh - 52px);
+            margin-top: 52px;
+        }
+
+        /* Hero Section */
+        .hero-section {
+            flex: 1;
+            padding-right: 60px;
+        }
+
+        .hero-title {
+            font-size: 56px;
+            font-weight: 200;
+            line-height: 1.2;
+            color: #8f5849;
+            margin-bottom: 16px;
+        }
+
+        .hero-subtitle {
+            font-size: 32px;
+            font-weight: 400;
+            line-height: 1.25;
+            margin-bottom: 32px;
+        }
+
+        .feature-list {
+            margin-top: 48px;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 24px;
+            font-size: 18px;
+        }
+
+        .feature-icon {
+            color: var(--linkedin-blue);
+            font-size: 20px;
+            margin-right: 16px;
+            min-width: 24px;
+        }
+
+        /* Login Form - Exact LinkedIn Copy */
+        .login-container {
+            width: 400px;
+        }
+
+        .login-card {
+            background: var(--linkedin-white);
+            padding: 24px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            margin-bottom: 24px;
+        }
+
+        .form-title {
+            font-size: 32px;
+            font-weight: 400;
+            margin-bottom: 4px;
+        }
+
+        .form-subtitle {
+            color: var(--linkedin-text-secondary);
+            font-size: 14px;
+            margin-bottom: 24px;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--linkedin-text);
+            margin-bottom: 4px;
+            display: block;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 14px;
+            font-size: 16px;
+            border: 1px solid var(--linkedin-border);
+            border-radius: 4px;
+            transition: all 0.15s;
+        }
+
+        .form-control:focus {
+            border-color: var(--linkedin-blue);
+            outline: none;
+            box-shadow: 0 0 0 1px var(--linkedin-blue);
+        }
+
+        .form-control:hover {
+            border-color: rgba(0,0,0,0.9);
+        }
+
+        .password-wrapper {
+            position: relative;
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: var(--linkedin-text-secondary);
+            cursor: pointer;
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 14px;
+            font-size: 16px;
+            font-weight: 600;
+            background-color: var(--linkedin-blue);
+            color: white;
+            border: none;
+            border-radius: 24px;
+            cursor: pointer;
+            transition: background-color 0.15s;
+            margin-top: 8px;
+        }
+
+        .login-btn:hover {
+            background-color: var(--linkedin-blue-dark);
+        }
+
+        .divider {
+            text-align: center;
+            position: relative;
+            margin: 16px 0;
+            color: var(--linkedin-text-secondary);
+        }
+
+        .divider:before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 50%;
+            width: 45%;
+            height: 1px;
+            background-color: rgba(0,0,0,0.15);
+        }
+
+        .divider:after {
+            content: "";
+            position: absolute;
+            right: 0;
+            top: 50%;
+            width: 45%;
+            height: 1px;
+            background-color: rgba(0,0,0,0.15);
+        }
+
+        .signup-prompt {
+            text-align: center;
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid rgba(0,0,0,0.15);
+        }
+
+        .signup-prompt a {
+            color: var(--linkedin-blue);
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .signup-prompt a:hover {
+            text-decoration: underline;
+        }
+
+        /* Footer */
+        .linkedin-footer {
+            padding: 24px 0;
+            text-align: center;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        .footer-links a {
+            color: var(--linkedin-text-secondary);
+            text-decoration: none;
+            font-size: 12px;
+        }
+
+        .footer-links a:hover {
+            color: var(--linkedin-blue);
+            text-decoration: underline;
+        }
+
+        .footer-logo {
+            color: var(--linkedin-blue);
+            font-weight: 600;
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .copyright {
+            color: var(--linkedin-text-secondary);
+            font-size: 12px;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .main-container {
+                flex-direction: column;
+                padding-top: 32px;
+            }
+
+            .hero-section {
+                padding-right: 0;
+                text-align: center;
+                margin-bottom: 32px;
+            }
+
+            .hero-title {
+                font-size: 40px;
+            }
+
+            .hero-subtitle {
+                font-size: 24px;
+            }
+
+            .login-container {
+                width: 100%;
+                max-width: 400px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .hero-title {
+                font-size: 32px;
+            }
+
+            .hero-subtitle {
+                font-size: 20px;
+            }
+
+            .login-card {
+                box-shadow: none;
+                border: 1px solid rgba(0,0,0,0.08);
+            }
+        }
+
+        /* Custom select styling */
+        select.form-control {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%23666666' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            background-size: 16px;
+            padding-right: 40px;
+            cursor: pointer;
+        }
+
+    </style>
+</head>
+<body>
+<!-- LinkedIn Header -->
+<header class="linkedin-header">
+    <a href="#" class="linkedin-logo">
+        <i class="fab fa-linkedin"></i>
+        <span>JobMatcher</span>
+    </a>
+
+    <div class="nav-links">
+        <a href="#" class="nav-link">
+            <i class="far fa-compass"></i>
+            <span>Découvrir</span>
+        </a>
+        <a href="#" class="nav-link">
+            <i class="far fa-user"></i>
+            <span>Personnes</span>
+        </a>
+        <a href="#" class="nav-link">
+            <i class="far fa-newspaper"></i>
+            <span>Publications</span>
+        </a>
+        <a href="signup.html" class="nav-link">
+            <i class="far fa-user-plus"></i>
+            <span>Rejoindre</span>
+        </a>
+    </div>
+</header>
+
+<!-- Main Content -->
+<main class="main-container">
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <h1 class="hero-title">Bienvenue dans votre communauté professionnelle</h1>
+        <h2 class="hero-subtitle">Trouvez l'emploi idéal ou le talent qu'il vous faut</h2>
+
+        <div class="feature-list">
+            <div class="feature-item">
+                <div class="feature-icon">
+                    <i class="fas fa-search"></i>
+                </div>
+                <span>Recherchez des emplois correspondant à vos compétences</span>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon">
+                    <i class="fas fa-user-friends"></i>
+                </div>
+                <span>Développez votre réseau professionnel</span>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon">
+                    <i class="fas fa-graduation-cap"></i>
+                </div>
+                <span>Développez vos compétences avec des formations</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Login Form -->
+    <section class="login-container">
+        <div class="login-card">
+            <h2 class="form-title">S'identifier</h2>
+            <p class="form-subtitle">Restez informé de l'actualité de vos professions</p>
+
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="email" class="form-label">Email</label>
+                    <input type="email" id="email" class="form-control" placeholder="" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="pass" class="form-label">Mot de passe</label>
+                    <div class="password-wrapper">
+                        <input type="password" id="pass" class="form-control" placeholder="" required>
+                        <button type="button" class="password-toggle" id="togglePassword">
+                            <i class="far fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="role" class="form-label">Je me connecte en tant que :</label>
+                    <select id="role" class="form-control">
+                        <option value="candidate">Candidat</option>
+                        <option value="recruiter">Recruteur</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="login-btn">S'identifier</button>
+
+                <div class="divider">ou</div>
+
+
+            </form>
+
+            <div class="signup-prompt">
+                Nouveau sur JobMatcher ? <a href="signup.html">S'inscrire</a>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="linkedin-footer">
+            <div class="footer-logo">
+                <i class="fab fa-linkedin"></i>
+                <span>JobMatcher</span>
+            </div>
+
+            <div class="footer-links">
+                <a href="#">À propos</a>
+                <a href="#">Accessibilité</a>
+                <a href="#">Conditions générales</a>
+                <a href="#">Politique de confidentialité</a>
+                <a href="#">Politique relative aux cookies</a>
+                <a href="#">Copyright © 2023</a>
+                <a href="#">Marques</a>
+            </div>
+
+            <div class="copyright">
+                JobMatcher Corporation © 2023
+            </div>
+        </footer>
+    </section>
+</main>
+
+<!-- Assistant UI -->
+<div class="assistant-backdrop" id="assistantBackdrop" aria-hidden="true"></div>
+<section class="assistant-panel" id="assistantPanel" role="dialog" aria-modal="true" aria-label="Assistant">
+    <div class="assistant-header">
+        <div class="assistant-title">
+            <i class="fa-solid fa-wand-magic-sparkles" aria-hidden="true"></i>
+            <span>Assistant</span>
+        </div>
+        <button type="button" class="assistant-close" id="assistantClose" aria-label="Fermer">
+            <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+        </button>
+    </div>
+    <div class="assistant-body">
+        <div class="assistant-messages" id="assistantMessages"></div>
+        <div class="assistant-inputRow">
+            <input class="assistant-input" id="assistantInput" placeholder="Écris ta question…" />
+            <button class="assistant-send" id="assistantSend" type="button">Envoyer</button>
+        </div>
+        <div class="assistant-hint">
+            Modèle:
+            <select id="assistantModel" class="form-select form-select-sm d-inline-block" style="width: auto; vertical-align: middle;">
+                <option value="llama3" selected>llama3</option>
+                <option value="mistral">mistral</option>
+            </select>
+            (Ollama doit tourner sur le port 11434)
+        </div>
+    </div>
+</section>
+<button type="button" class="assistant-fab" id="assistantFab" aria-label="Ouvrir l’assistant" title="Assistant">
+    <i class="fa-solid fa-robot" aria-hidden="true"></i>
+</button>
+
+<script>
+    // Your original login function (unchanged)
+    async function login() {
+        const email = document.getElementById("email").value;
+        const pass = document.getElementById("pass").value;
+        const role = document.getElementById("role").value;
+
+        if(!email || !pass) return alert("Veuillez remplir tous les champs.");
+
+        try {
+            const res = await fetch("/api/login", {
+                method: "POST",
+                headers: {"Content-Type":"application/json"},
+                body: JSON.stringify({ email: email, password: pass })
+            });
+
+            if(res.ok) {
+                const user = await res.json();
+                localStorage.setItem("user", JSON.stringify(user));
+
+                // Redirection selon le choix
+                if(role === "recruiter") {
+                    window.location.href = "dashboard_recruiter.html";
+                } else {
+                    window.location.href = "dashboard_candidate.html";
+                }
+            } else {
+                alert("Email ou mot de passe incorrect.");
+            }
+        } catch(e) {
+            alert("Erreur de connexion au serveur.");
+        }
+    }
+
+    // Password visibility toggle
+    document.getElementById('togglePassword').addEventListener('click', function() {
+        const passwordInput = document.getElementById('pass');
+        const icon = this.querySelector('i');
+
+        if (passwordInput.type === 'password') {
+            passwordInput.type = 'text';
+            icon.classList.remove('fa-eye');
+            icon.classList.add('fa-eye-slash');
+        } else {
+            passwordInput.type = 'password';
+            icon.classList.remove('fa-eye-slash');
+            icon.classList.add('fa-eye');
+        }
+    });
+
+    // Form submission
+    document.getElementById('loginForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        login();
+    });
+
+    // Enter key support
+    document.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            const activeElement = document.activeElement;
+            if (activeElement.tagName === 'INPUT' || activeElement.tagName === 'SELECT') {
+                login();
+            }
+        }
+    });
+
+    // LinkedIn-style placeholder animation
+    const emailInput = document.getElementById('email');
+    const passInput = document.getElementById('pass');
+
+    [emailInput, passInput].forEach(input => {
+        input.addEventListener('focus', function() {
+            this.setAttribute('placeholder', this.getAttribute('data-placeholder') || '');
+        });
+
+        input.addEventListener('blur', function() {
+            this.setAttribute('data-placeholder', this.placeholder);
+            this.placeholder = '';
+        });
+    });
+
+    // Initialize placeholders
+    emailInput.placeholder = "nom@exemple.com";
+    passInput.placeholder = "••••••";
+
+</script>
+<script src="assistant.js"></script>
+</body>
+</html>

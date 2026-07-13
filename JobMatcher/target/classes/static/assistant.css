@@ -1,0 +1,169 @@
+/* Shared Assistant UI (used by multiple static pages) */
+
+.assistant-fab {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  z-index: 1200;
+  width: 56px;
+  height: 56px;
+  border-radius: 999px;
+  border: 1px solid rgba(0,0,0,0.10);
+  background: #0a66c2;
+  color: #fff;
+  box-shadow: 0 10px 22px rgba(0,0,0,0.18);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  transition: transform 0.15s ease, background-color 0.15s ease;
+}
+
+.assistant-fab:hover {
+  background: #004182;
+  transform: translateY(-1px);
+}
+
+.assistant-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.28);
+  z-index: 1199;
+  display: none;
+}
+
+.assistant-panel {
+  position: fixed;
+  right: 20px;
+  bottom: 88px;
+  width: min(420px, calc(100vw - 40px));
+  background: #fff;
+  border: 1px solid rgba(0,0,0,0.12);
+  border-radius: 12px;
+  box-shadow: 0 18px 40px rgba(0,0,0,0.22);
+  z-index: 1201;
+  overflow: hidden;
+  display: none;
+}
+
+.assistant-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 14px;
+  border-bottom: 1px solid rgba(0,0,0,0.08);
+}
+
+.assistant-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 700;
+}
+
+.assistant-close {
+  border: none;
+  background: transparent;
+  color: rgba(0,0,0,0.6);
+  cursor: pointer;
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+}
+
+.assistant-close:hover {
+  background: rgba(0,0,0,0.06);
+  color: rgba(0,0,0,0.9);
+}
+
+.assistant-body {
+  padding: 14px;
+  font-size: 14px;
+}
+
+.assistant-messages {
+  height: 260px;
+  overflow: auto;
+  padding: 10px;
+  background: rgba(0,0,0,0.02);
+  border: 1px solid rgba(0,0,0,0.06);
+  border-radius: 10px;
+}
+
+.assistant-msg {
+  display: flex;
+  gap: 10px;
+  margin: 10px 0;
+}
+
+.assistant-badge {
+  width: 26px;
+  height: 26px;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  font-weight: 700;
+  font-size: 12px;
+  flex: 0 0 26px;
+}
+
+.assistant-badge.user {
+  background: rgba(10, 102, 194, 0.12);
+  color: #0a66c2;
+}
+
+.assistant-badge.bot {
+  background: rgba(2, 132, 199, 0.12);
+  color: #0369a1;
+}
+
+.assistant-bubble {
+  background: #fff;
+  border: 1px solid rgba(0,0,0,0.08);
+  border-radius: 12px;
+  padding: 10px 12px;
+  line-height: 1.4;
+  white-space: pre-wrap;
+  word-break: break-word;
+  max-width: 100%;
+}
+
+.assistant-inputRow {
+  display: flex;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.assistant-input {
+  flex: 1;
+  border: 1px solid rgba(0,0,0,0.18);
+  border-radius: 10px;
+  padding: 10px 12px;
+  outline: none;
+}
+
+.assistant-input:focus {
+  border-color: #0a66c2;
+  box-shadow: 0 0 0 2px rgba(10, 102, 194, 0.18);
+}
+
+.assistant-send {
+  border: none;
+  background: #0a66c2;
+  color: #fff;
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.assistant-send:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.assistant-hint {
+  margin-top: 10px;
+  color: rgba(0,0,0,0.6);
+  font-size: 12px;
+}
+

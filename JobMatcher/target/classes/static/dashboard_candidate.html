@@ -1,0 +1,2200 @@
+<!DOCTYPE html>
+<html lang="fr" data-bs-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <title>JobMatcher - LinkedIn Style Dashboard</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+  <link rel="stylesheet" href="assistant.css">
+  <style>
+    :root {
+      --linkedin-blue: #0a66c2;
+      --linkedin-blue-dark: #004182;
+      --linkedin-blue-light: #e8f4fc;
+      --linkedin-gray-bg: #f3f2ef;
+      --linkedin-white: #ffffff;
+      --linkedin-border: #e0e0e0;
+      --linkedin-text: #191919;
+      --linkedin-text-secondary: #666666;
+      --linkedin-green: #057642;
+      --linkedin-gold: #f8c77e;
+      --linkedin-post-bg: #ffffff;
+      --linkedin-hover-bg: #f5f5f5;
+    }
+
+    [data-bs-theme="dark"] {
+      --linkedin-gray-bg: #121212;
+      --linkedin-white: #1d1d1d;
+      --linkedin-border: #3d3d3d;
+      --linkedin-text: #ffffff;
+      --linkedin-text-secondary: #b0b0b0;
+      --linkedin-post-bg: #2d2d2d;
+      --linkedin-hover-bg: #333333;
+    }
+
+    body {
+      background-color: var(--linkedin-gray-bg);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      padding-top: 52px;
+      -webkit-font-smoothing: antialiased;
+      transition: background-color 0.3s ease;
+    }
+
+    /* Modern Navbar */
+    .navbar-linkedin {
+      background-color: var(--linkedin-white);
+      border-bottom: 1px solid var(--linkedin-border);
+      height: 52px;
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 1050;
+      padding: 0 24px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+      transition: all 0.3s ease;
+    }
+
+    .navbar-brand-linkedin {
+      color: var(--linkedin-blue) !important;
+      font-size: 2.2rem;
+      font-weight: 700;
+      line-height: 1;
+      margin-right: 10px;
+      text-decoration: none;
+      transition: transform 0.2s ease;
+    }
+
+    .navbar-brand-linkedin:hover {
+      transform: scale(1.05);
+    }
+
+    .search-box {
+      background: var(--linkedin-hover-bg);
+      border-radius: 6px;
+      padding: 0 12px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      width: 320px;
+      transition: all 0.2s ease;
+      border: 1px solid transparent;
+    }
+
+    .search-box:focus-within {
+      background: var(--linkedin-white);
+      border-color: var(--linkedin-blue);
+      box-shadow: 0 0 0 2px rgba(10, 102, 194, 0.2);
+    }
+
+    .search-box input {
+      border: none;
+      background: transparent;
+      font-size: 14px;
+      width: 100%;
+      outline: none;
+      margin-left: 8px;
+      color: var(--linkedin-text);
+    }
+
+    .nav-icon {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      color: var(--linkedin-text-secondary);
+      text-decoration: none;
+      min-width: 80px;
+      font-size: 12px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      position: relative;
+      padding: 8px 0;
+      border-radius: 4px;
+    }
+
+    .nav-icon:hover {
+      color: var(--linkedin-text);
+      background-color: var(--linkedin-hover-bg);
+    }
+
+    .nav-icon.active {
+      color: var(--linkedin-blue);
+      border-bottom: 2px solid var(--linkedin-blue);
+    }
+
+    .nav-icon i {
+      font-size: 20px;
+      margin-bottom: 2px;
+    }
+
+    .notification-badge {
+      position: absolute;
+      top: 4px;
+      right: 20px;
+      width: 8px;
+      height: 8px;
+      background-color: #ff5c5c;
+      border-radius: 50%;
+      border: 2px solid var(--linkedin-white);
+    }
+
+    /* Main Container */
+    .main-container {
+      max-width: 1200px;
+      margin: 24px auto;
+      padding: 0 16px;
+    }
+
+    /* Profile Sidebar */
+    .profile-sidebar {
+      position: sticky;
+      top: 76px;
+    }
+
+    .sidebar-card {
+      background: var(--linkedin-white);
+      border-radius: 12px;
+      border: 1px solid var(--linkedin-border);
+      overflow: hidden;
+      margin-bottom: 16px;
+      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+      box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .sidebar-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 24px rgba(0,0,0,0.1);
+    }
+
+    .profile-bg {
+      height: 56px;
+      background: linear-gradient(135deg, var(--linkedin-blue) 0%, #378fe9 100%);
+    }
+
+    .profile-info {
+      text-align: center;
+      margin-top: -28px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--linkedin-border);
+    }
+
+    .profile-avatar {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      border: 3px solid var(--linkedin-white);
+      background: linear-gradient(135deg, var(--linkedin-blue) 0%, #378fe9 100%);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      margin: 0 auto;
+      font-weight: 600;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      transition: transform 0.3s ease;
+    }
+
+    .profile-avatar:hover {
+      transform: scale(1.05);
+    }
+
+    /* Stats */
+    .stats-row {
+      padding: 14px 16px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--linkedin-text-secondary);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      border-bottom: 1px solid var(--linkedin-border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .stats-row:last-child {
+      border-bottom: none;
+    }
+
+    .stats-row:hover {
+      background: var(--linkedin-hover-bg);
+      padding-left: 20px;
+    }
+
+    .stats-num {
+      color: var(--linkedin-blue);
+      font-weight: 700;
+    }
+
+    /* Feed Header */
+    .feed-header {
+      background: var(--linkedin-white);
+      border-radius: 12px;
+      border: 1px solid var(--linkedin-border);
+      padding: 20px 24px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+
+    .sort-tab {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--linkedin-text-secondary);
+      padding: 8px 16px;
+      cursor: pointer;
+      border-radius: 20px;
+      text-decoration: none;
+      margin-right: 8px;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .sort-tab.active {
+      background: linear-gradient(135deg, var(--linkedin-blue) 0%, #378fe9 100%);
+      color: white;
+      box-shadow: 0 4px 12px rgba(10, 102, 194, 0.3);
+    }
+
+    .sort-tab:hover:not(.active) {
+      background-color: var(--linkedin-hover-bg);
+      transform: translateY(-1px);
+    }
+
+    /* Modern Job Card */
+    .job-card {
+      background: var(--linkedin-white);
+      border: 1px solid var(--linkedin-border);
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 16px;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .job-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--linkedin-blue), #378fe9);
+      transform: scaleX(0);
+      transition: transform 0.3s ease;
+    }
+
+    .job-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 16px 32px rgba(0,0,0,0.12);
+      border-color: var(--linkedin-blue);
+    }
+
+    .job-card:hover::before {
+      transform: scaleX(1);
+    }
+
+    .job-card.new::after {
+      content: "NOUVEAU";
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      background: var(--linkedin-green);
+      color: white;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.7; }
+    }
+
+    .company-logo {
+      width: 56px;
+      height: 56px;
+      background: linear-gradient(135deg, var(--linkedin-blue-light) 0%, #e8f4fc 100%);
+      color: var(--linkedin-blue);
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      margin-right: 16px;
+      border-radius: 12px;
+      border: 1px solid #dce6f1;
+      transition: transform 0.3s ease;
+    }
+
+    .job-card:hover .company-logo {
+      transform: rotate(5deg) scale(1.05);
+    }
+
+    .job-title {
+      font-weight: 700;
+      color: var(--linkedin-text);
+      font-size: 18px;
+      margin-bottom: 4px;
+      line-height: 1.3;
+      transition: color 0.2s ease;
+    }
+
+    .job-card:hover .job-title {
+      color: var(--linkedin-blue);
+    }
+
+    /* Social Feed Posts */
+    .social-feed {
+      display: none;
+    }
+
+    .post-card {
+      background: var(--linkedin-white);
+      border: 1px solid var(--linkedin-border);
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 16px;
+      transition: all 0.3s ease;
+    }
+
+    .post-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 24px rgba(0,0,0,0.08);
+      border-color: var(--linkedin-blue);
+    }
+
+    .post-header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .post-avatar {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      font-weight: 600;
+      margin-right: 16px;
+      border: 3px solid var(--linkedin-white);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+
+    .post-author {
+      font-weight: 700;
+      color: var(--linkedin-text);
+      margin-bottom: 4px;
+      font-size: 16px;
+    }
+
+    .post-title {
+      color: var(--linkedin-text-secondary);
+      font-size: 14px;
+      margin-bottom: 2px;
+    }
+
+    .post-meta {
+      font-size: 12px;
+      color: var(--linkedin-text-secondary);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .post-meta i {
+      font-size: 10px;
+    }
+
+    .post-content {
+      color: var(--linkedin-text);
+      line-height: 1.6;
+      margin-bottom: 20px;
+      font-size: 15px;
+      padding: 0 8px;
+    }
+
+    .post-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 20px;
+      padding: 0 8px;
+    }
+
+    .post-tag {
+      background: var(--linkedin-blue-light);
+      color: var(--linkedin-blue);
+      font-size: 12px;
+      font-weight: 600;
+      padding: 6px 12px;
+      border-radius: 16px;
+      border: 1px solid var(--linkedin-border);
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+
+    .post-tag:hover {
+      background: var(--linkedin-blue);
+      color: white;
+      transform: translateY(-1px);
+    }
+
+    .post-actions {
+      display: flex;
+      gap: 16px;
+      padding-top: 20px;
+      border-top: 1px solid var(--linkedin-border);
+    }
+
+    .post-action {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--linkedin-text-secondary);
+      background: none;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 20px;
+      transition: all 0.2s ease;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .post-action:hover {
+      background: var(--linkedin-hover-bg);
+      color: var(--linkedin-blue);
+    }
+
+    .post-action.active {
+      color: var(--linkedin-blue);
+      background: var(--linkedin-blue-light);
+    }
+
+    .post-action .count {
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .post-action.liked {
+      color: var(--linkedin-blue);
+    }
+
+    .post-action.liked i {
+      color: var(--linkedin-blue);
+    }
+
+    /* Interactive Elements */
+    .btn-apply {
+      background: linear-gradient(135deg, var(--linkedin-blue) 0%, #378fe9 100%);
+      color: white;
+      border: none;
+      border-radius: 24px;
+      padding: 10px 24px;
+      font-weight: 700;
+      font-size: 14px;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 4px 12px rgba(10, 102, 194, 0.2);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn-apply::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.3);
+      transform: translate(-50%, -50%);
+      transition: width 0.6s, height 0.6s;
+    }
+
+    .btn-apply:hover::before {
+      width: 300px;
+      height: 300px;
+    }
+
+    .btn-apply:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(10, 102, 194, 0.3);
+    }
+
+    .btn-saved {
+      color: var(--linkedin-text-secondary);
+      font-size: 20px;
+      background: none;
+      border: none;
+      padding: 8px;
+      border-radius: 50%;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn-saved::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: var(--linkedin-hover-bg);
+      border-radius: 50%;
+      transform: scale(0);
+      transition: transform 0.3s ease;
+    }
+
+    .btn-saved:hover::before {
+      transform: scale(1);
+    }
+
+    .btn-saved:hover {
+      color: var(--linkedin-gold);
+      transform: scale(1.1);
+    }
+
+    .btn-saved.active i {
+      color: var(--linkedin-gold);
+      animation: bookmarkPop 0.3s ease;
+    }
+
+    @keyframes bookmarkPop {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.3); }
+      100% { transform: scale(1); }
+    }
+
+    /* Job Details Modal */
+    .job-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(8px);
+      z-index: 1100;
+      display: none;
+      opacity: 0;
+      transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .job-modal.active {
+      display: flex;
+      opacity: 1;
+      align-items: center;
+      justify-content: center;
+      animation: modalFadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    @keyframes modalFadeIn {
+      from {
+        opacity: 0;
+        backdrop-filter: blur(0);
+      }
+      to {
+        opacity: 1;
+        backdrop-filter: blur(8px);
+      }
+    }
+
+    .modal-content {
+      background: var(--linkedin-white);
+      border-radius: 24px;
+      width: 95%;
+      max-width: 1000px;
+      max-height: 90vh;
+      overflow-y: auto;
+      animation: modalSlideIn 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 24px 64px rgba(0,0,0,0.3);
+      border: 1px solid var(--linkedin-border);
+    }
+
+    @keyframes modalSlideIn {
+      from {
+        opacity: 0;
+        transform: translateY(40px) scale(0.95);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    .modal-header {
+      padding: 32px 40px 20px;
+      border-bottom: 1px solid var(--linkedin-border);
+      position: sticky;
+      top: 0;
+      background: var(--linkedin-white);
+      border-radius: 24px 24px 0 0;
+      z-index: 1;
+    }
+
+    .modal-body {
+      padding: 0 40px 40px;
+    }
+
+    .modal-footer {
+      padding: 24px 40px;
+      border-top: 1px solid var(--linkedin-border);
+      display: flex;
+      gap: 12px;
+      justify-content: flex-end;
+      position: sticky;
+      bottom: 0;
+      background: var(--linkedin-white);
+      border-radius: 0 0 24px 24px;
+    }
+
+    .close-modal {
+      position: absolute;
+      top: 24px;
+      right: 24px;
+      background: var(--linkedin-hover-bg);
+      border: none;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      color: var(--linkedin-text);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      z-index: 2;
+    }
+
+    .close-modal:hover {
+      background: #e6e6e6;
+      transform: rotate(90deg);
+    }
+
+    /* Job Detail Grid */
+    .job-detail-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 40px;
+      margin-top: 20px;
+    }
+
+    .job-main-content {
+      display: flex;
+      flex-direction: column;
+      gap: 32px;
+    }
+
+    .job-sidebar {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .detail-section {
+      background: var(--linkedin-hover-bg);
+      border-radius: 16px;
+      padding: 24px;
+      border-left: 4px solid var(--linkedin-blue);
+    }
+
+    .detail-section h3 {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--linkedin-text);
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .detail-section h3 i {
+      color: var(--linkedin-blue);
+    }
+
+    .requirements-list {
+      list-style: none;
+      padding-left: 0;
+      margin: 0;
+    }
+
+    .requirements-list li {
+      padding: 8px 0;
+      padding-left: 28px;
+      position: relative;
+      color: var(--linkedin-text);
+      line-height: 1.5;
+    }
+
+    .requirements-list li:before {
+      content: "✓";
+      position: absolute;
+      left: 0;
+      color: var(--linkedin-green);
+      font-weight: bold;
+      font-size: 14px;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 992px) {
+      .job-detail-grid {
+        grid-template-columns: 1fr;
+        gap: 24px;
+      }
+
+      .search-box {
+        width: 240px;
+      }
+
+      .nav-icon {
+        min-width: 60px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .navbar-linkedin {
+        padding: 0 16px;
+      }
+
+      .search-box {
+        display: none;
+      }
+
+      .nav-icon span {
+        display: none;
+      }
+
+      .nav-icon {
+        min-width: 50px;
+        padding: 12px 0;
+      }
+
+      .nav-icon i {
+        font-size: 18px;
+        margin-bottom: 0;
+      }
+
+      .modal-content {
+        width: 95%;
+        max-height: 85vh;
+        border-radius: 16px;
+      }
+
+      .modal-header,
+      .modal-body,
+      .modal-footer {
+        padding: 20px;
+      }
+
+      .close-modal {
+        top: 16px;
+        right: 16px;
+        width: 36px;
+        height: 36px;
+      }
+
+      .post-avatar {
+        width: 48px;
+        height: 48px;
+        font-size: 18px;
+      }
+    }
+
+    /* Smooth Scroll */
+    html {
+      scroll-behavior: smooth;
+    }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: var(--linkedin-hover-bg);
+      border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--linkedin-blue);
+      border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--linkedin-blue-dark);
+    }
+
+    /* Loading Animation */
+    .loading-shimmer {
+      background: linear-gradient(
+              90deg,
+              var(--linkedin-hover-bg) 25%,
+              var(--linkedin-border) 50%,
+              var(--linkedin-hover-bg) 75%
+      );
+      background-size: 200% 100%;
+      animation: shimmer 1.5s infinite;
+      border-radius: 8px;
+    }
+
+    @keyframes shimmer {
+      0% { background-position: -200% 0; }
+      100% { background-position: 200% 0; }
+    }
+
+    /* Theme Toggle */
+    .theme-toggle {
+      background: none;
+      border: none;
+      color: var(--linkedin-text-secondary);
+      padding: 8px;
+      border-radius: 50%;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .theme-toggle:hover {
+      background: var(--linkedin-hover-bg);
+      color: var(--linkedin-text);
+      transform: rotate(30deg);
+    }
+
+    /* Create Post Button */
+    .create-post {
+      background: var(--linkedin-white);
+      border: 1px solid var(--linkedin-border);
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .create-post:hover {
+      background: var(--linkedin-hover-bg);
+      border-color: var(--linkedin-blue);
+    }
+
+    .create-post-input {
+      flex: 1;
+      background: var(--linkedin-hover-bg);
+      border: 1px solid var(--linkedin-border);
+      border-radius: 24px;
+      padding: 12px 20px;
+      font-size: 14px;
+      color: var(--linkedin-text);
+      transition: all 0.3s ease;
+    }
+
+    .create-post-input:hover {
+      background: var(--linkedin-white);
+      border-color: var(--linkedin-blue);
+    }
+
+    .post-options {
+      display: flex;
+      justify-content: space-between;
+      padding-top: 16px;
+      border-top: 1px solid var(--linkedin-border);
+      margin-top: 16px;
+    }
+
+    .post-option {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--linkedin-text-secondary);
+      background: none;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 20px;
+      transition: all 0.2s ease;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .post-option:hover {
+      background: var(--linkedin-hover-bg);
+      color: var(--linkedin-blue);
+    }
+
+  </style>
+</head>
+<body>
+
+<!-- Modern Navbar -->
+<nav class="navbar-linkedin d-flex align-items-center">
+  <a class="navbar-brand-linkedin" href="#">in</a>
+
+  <div class="search-box d-none d-md-flex">
+    <i class="bi bi-search text-muted"></i>
+    <input type="text" id="searchInput" placeholder="Rechercher un emploi, une compétence..." onkeyup="filterJobs()">
+  </div>
+
+  <div class="ms-auto d-flex align-items-center gap-3">
+    <button class="theme-toggle" onclick="toggleTheme()">
+      <i class="bi bi-moon-fill"></i>
+    </button>
+
+    <a onclick="setTab('all')" class="nav-icon active">
+      <i class="bi bi-house-door-fill"></i>
+      <span>Accueil</span>
+    </a>
+    <a onclick="setTab('network')" class="nav-icon">
+      <i class="bi bi-people-fill"></i>
+      <span>Réseau</span>
+      <span class="notification-badge"></span>
+    </a>
+    <a onclick="setTab('jobs')" class="nav-icon">
+      <i class="bi bi-briefcase-fill"></i>
+      <span>Emplois</span>
+    </a>
+    <a onclick="setTab('posts')" class="nav-icon">
+      <i class="bi bi-chat-left-text-fill"></i>
+      <span>Posts</span>
+      <span class="notification-badge"></span>
+    </a>
+
+    <div class="dropdown">
+      <a class="nav-icon dropdown-toggle" data-bs-toggle="dropdown">
+        <div class="profile-avatar" style="width: 32px; height: 32px; font-size: 14px;">
+          <span id="navAvatar">U</span>
+        </div>
+      </a>
+      <div class="dropdown-menu dropdown-menu-end" style="min-width: 240px;">
+        <div class="px-3 py-2">
+          <div class="d-flex align-items-center">
+            <div class="profile-avatar" style="width: 48px; height: 48px; font-size: 18px;">
+              <span id="navAvatarLarge">U</span>
+            </div>
+            <div class="ms-2">
+              <div class="fw-bold" id="navName">Utilisateur</div>
+              <div class="small text-muted" id="navTitle">Développeur Full Stack</div>
+            </div>
+          </div>
+        </div>
+        <div class="dropdown-divider"></div>
+        <a class="dropdown-item" href="profile.html"><i class="bi bi-person me-2"></i>Mon profil</a>
+        <a class="dropdown-item" href="#"><i class="bi bi-gear me-2"></i>Paramètres</a>
+        <a class="dropdown-item" href="#" onclick="toggleTheme()">
+          <i class="bi bi-moon me-2"></i>Mode sombre
+        </a>
+        <div class="dropdown-divider"></div>
+        <a class="dropdown-item text-danger" href="#" onclick="logout()">
+          <i class="bi bi-box-arrow-right me-2"></i>Déconnexion
+        </a>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- Main Container -->
+<div class="main-container">
+  <div class="row">
+    <!-- Left Sidebar -->
+    <div class="col-lg-3">
+      <div class="profile-sidebar">
+        <div class="sidebar-card">
+          <div class="profile-bg"></div>
+          <div class="profile-info">
+            <div class="profile-avatar" id="uAvatar">U</div>
+            <div class="mt-3 fw-bold fs-5" id="uName">Utilisateur</div>
+            <div class="small text-muted mb-3" id="uTitle">Développeur Full Stack</div>
+            <div class="d-flex justify-content-center gap-2 mb-3">
+              <span class="badge bg-primary rounded-pill">
+                <i class="bi bi-lightning-charge"></i> Premium
+              </span>
+              <span class="badge bg-success rounded-pill">
+                <i class="bi bi-check-circle"></i> Disponible
+              </span>
+            </div>
+            <div class="progress mb-2" style="height: 6px;">
+              <div class="progress-bar bg-primary" style="width: 85%"></div>
+            </div>
+            <small class="text-muted">Profil complété à 85%</small>
+          </div>
+          <div>
+            <div class="stats-row">
+              <span><i class="bi bi-eye me-1"></i> Vues du profil</span>
+              <span class="stats-num" id="uViews">128</span>
+            </div>
+            <div class="stats-row">
+              <span><i class="bi bi-send-check me-1"></i> Postulations</span>
+              <span class="stats-num" id="uApplications">12</span>
+            </div>
+            <div class="stats-row">
+              <span><i class="bi bi-bookmark me-1"></i> Offres sauvegardées</span>
+              <span class="stats-num" id="uSaved">8</span>
+            </div>
+            <div class="stats-row">
+              <span><i class="bi bi-people me-1"></i> Relations</span>
+              <span class="stats-num" id="uConnections">245</span>
+            </div>
+          </div>
+          <div class="p-3 text-center border-top">
+            <button class="btn btn-outline-primary btn-sm w-100" onclick="window.location.href='profile.html'">
+              <i class="bi bi-eye me-1"></i>Voir mon profil
+            </button>
+          </div>
+        </div>
+
+        <!-- Skills Match -->
+        <div class="sidebar-card">
+          <div class="p-3">
+            <div class="fw-bold mb-3">Top Compétences</div>
+            <div class="mb-2">
+              <div class="d-flex justify-content-between mb-1">
+                <span class="small">React.js</span>
+                <span class="small fw-bold text-success">95%</span>
+              </div>
+              <div class="progress" style="height: 6px;">
+                <div class="progress-bar bg-success" style="width: 95%"></div>
+              </div>
+            </div>
+            <div class="mb-2">
+              <div class="d-flex justify-content-between mb-1">
+                <span class="small">Node.js</span>
+                <span class="small fw-bold text-primary">85%</span>
+              </div>
+              <div class="progress" style="height: 6px;">
+                <div class="progress-bar bg-primary" style="width: 85%"></div>
+              </div>
+            </div>
+            <div class="mb-2">
+              <div class="d-flex justify-content-between mb-1">
+                <span class="small">TypeScript</span>
+                <span class="small fw-bold text-info">78%</span>
+              </div>
+              <div class="progress" style="height: 6px;">
+                <div class="progress-bar bg-info" style="width: 78%"></div>
+              </div>
+            </div>
+            <div class="mb-2">
+              <div class="d-flex justify-content-between mb-1">
+                <span class="small">MongoDB</span>
+                <span class="small fw-bold text-warning">70%</span>
+              </div>
+              <div class="progress" style="height: 6px;">
+                <div class="progress-bar bg-warning" style="width: 70%"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Recent Activity -->
+        <div class="sidebar-card">
+          <div class="p-3">
+            <div class="fw-bold mb-3">Activité récente</div>
+            <div class="list-group list-group-flush">
+              <div class="list-group-item border-0 px-0 py-2">
+                <div class="d-flex align-items-center">
+                  <div class="profile-avatar" style="width: 32px; height: 32px; font-size: 12px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                    <span>A</span>
+                  </div>
+                  <div class="ms-2">
+                    <small class="text-muted">Alex a postulé à</small>
+                    <div class="fw-bold small">Développeur React Senior</div>
+                  </div>
+                </div>
+              </div>
+              <div class="list-group-item border-0 px-0 py-2">
+                <div class="d-flex align-items-center">
+                  <div class="profile-avatar" style="width: 32px; height: 32px; font-size: 12px; background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+                    <span>M</span>
+                  </div>
+                  <div class="ms-2">
+                    <small class="text-muted">Marie a partagé</small>
+                    <div class="fw-bold small">Conseils entretien technique</div>
+                  </div>
+                </div>
+              </div>
+              <div class="list-group-item border-0 px-0 py-2">
+                <div class="d-flex align-items-center">
+                  <div class="profile-avatar" style="width: 32px; height: 32px; font-size: 12px; background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+                    <span>T</span>
+                  </div>
+                  <div class="ms-2">
+                    <small class="text-muted">Thomas a liké</small>
+                    <div class="fw-bold small">Votre post sur l'IA</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Feed -->
+    <div class="col-lg-6">
+      <!-- Create Post -->
+      <div class="create-post" id="createPostSection" style="display: none;">
+        <div class="profile-avatar" style="width: 48px; height: 48px; font-size: 18px;">
+          <span id="postAvatar">U</span>
+        </div>
+        <input type="text" class="create-post-input" placeholder="Partagez votre pensée ou une opportunité..." id="postInput">
+        <button class="btn btn-primary" onclick="createPost()">
+          <i class="bi bi-send"></i>
+        </button>
+      </div>
+
+      <!-- Feed Header -->
+      <div class="feed-header">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <div>
+            <h5 class="fw-bold mb-1" id="feedTitle">Votre fil d'actualité</h5>
+            <p class="text-muted small mb-0" id="feedSubtitle">Découvrez des opportunités et des discussions</p>
+          </div>
+          <div>
+            <button onclick="showCreatePost()" class="btn btn-outline-primary btn-sm me-2">
+              <i class="bi bi-plus-lg me-1"></i>Créer un post
+            </button>
+            <button onclick="loadContent()" class="btn btn-link text-decoration-none p-0">
+              <i class="bi bi-arrow-clockwise"></i>
+            </button>
+          </div>
+        </div>
+        <div class="d-flex flex-wrap gap-2">
+          <a onclick="setTab('all')" id="tab-all" class="sort-tab active">
+            <i class="bi bi-grid"></i> Tous
+          </a>
+          <a onclick="setTab('jobs')" id="tab-jobs" class="sort-tab">
+            <i class="bi bi-briefcase"></i> Offres
+          </a>
+          <a onclick="setTab('posts')" id="tab-posts" class="sort-tab">
+            <i class="bi bi-chat-left-text"></i> Posts
+          </a>
+          <a onclick="setTab('saved')" id="tab-saved" class="sort-tab">
+            <i class="bi bi-bookmark"></i> Enregistrés
+          </a>
+          <a onclick="setTab('applied')" id="tab-applied" class="sort-tab">
+            <i class="bi bi-check-circle"></i> Postulés
+          </a>
+        </div>
+      </div>
+
+      <!-- Jobs List -->
+      <div id="jobsList">
+        <!-- Loading skeleton -->
+        <div class="job-card loading-shimmer" style="height: 180px;"></div>
+        <div class="job-card loading-shimmer" style="height: 180px;"></div>
+        <div class="job-card loading-shimmer" style="height: 180px;"></div>
+      </div>
+
+      <!-- Social Feed -->
+      <div id="socialFeed" class="social-feed">
+        <!-- Posts will be loaded here -->
+      </div>
+
+      <!-- No Results -->
+      <div id="noResults" class="text-center py-5 d-none">
+        <div class="mb-4">
+          <i class="bi bi-search fs-1 text-muted"></i>
+        </div>
+        <h5 class="fw-bold mb-2">Aucun contenu trouvé</h5>
+        <p class="text-muted mb-4">Essayez de modifier vos critères de recherche</p>
+        <button onclick="resetFilters()" class="btn btn-primary">
+          <i class="bi bi-arrow-counterclockwise me-2"></i>Réinitialiser
+        </button>
+      </div>
+    </div>
+
+    <!-- Right Sidebar -->
+    <div class="col-lg-3 d-none d-lg-block">
+      <div class="profile-sidebar">
+        <!-- News & Updates -->
+        <div class="sidebar-card">
+          <div class="p-3">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <span class="fw-bold">Actualités tech</span>
+              <i class="bi bi-lightning-charge-fill text-warning"></i>
+            </div>
+            <div class="list-group list-group-flush">
+              <a href="#" class="list-group-item list-group-item-action border-0 px-0 py-2">
+                <div class="d-flex w-100 justify-content-between">
+                  <small class="text-primary fw-bold">#AIJobs</small>
+                  <small class="text-muted">2h</small>
+                </div>
+                <p class="mb-1 small">+45% d'offres IA en 2024</p>
+              </a>
+              <a href="#" class="list-group-item list-group-item-action border-0 px-0 py-2">
+                <div class="d-flex w-100 justify-content-between">
+                  <small class="text-primary fw-bold">#RemoteWork</small>
+                  <small class="text-muted">4h</small>
+                </div>
+                <p class="mb-1 small">Les entreprises adoptent l'hybride permanent</p>
+              </a>
+              <a href="#" class="list-group-item list-group-item-action border-0 px-0 py-2">
+                <div class="d-flex w-100 justify-content-between">
+                  <small class="text-primary fw-bold">#TechSalaries</small>
+                  <small class="text-muted">1j</small>
+                </div>
+                <p class="mb-1 small">+12% pour les devs full-stack</p>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Trending Hashtags -->
+        <div class="sidebar-card">
+          <div class="p-3">
+            <div class="fw-bold mb-3">Tendances</div>
+            <div class="d-flex flex-wrap gap-2">
+              <span class="badge bg-light text-dark border">#ReactJS</span>
+              <span class="badge bg-light text-dark border">#RemoteWork</span>
+              <span class="badge bg-light text-dark border">#TechJobs</span>
+              <span class="badge bg-light text-dark border">#CareerGrowth</span>
+              <span class="badge bg-light text-dark border">#InterviewTips</span>
+              <span class="badge bg-light text-dark border">#WebDev</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Who to Connect -->
+        <div class="sidebar-card">
+          <div class="p-3">
+            <div class="fw-bold mb-3">Personnes à connaître</div>
+            <div class="list-group list-group-flush">
+              <div class="list-group-item border-0 px-0 py-2">
+                <div class="d-flex align-items-center">
+                  <div class="profile-avatar" style="width: 40px; height: 40px; font-size: 14px; background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+                    <span>S</span>
+                  </div>
+                  <div class="ms-2 flex-grow-1">
+                    <div class="fw-bold small">Sarah Chen</div>
+                    <div class="text-muted xsmall">CTO @TechStartup</div>
+                  </div>
+                  <button class="btn btn-outline-primary btn-sm">
+                    <i class="bi bi-plus-lg"></i>
+                  </button>
+                </div>
+              </div>
+              <div class="list-group-item border-0 px-0 py-2">
+                <div class="d-flex align-items-center">
+                  <div class="profile-avatar" style="width: 40px; height: 40px; font-size: 14px; background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);">
+                    <span>M</span>
+                  </div>
+                  <div class="ms-2 flex-grow-1">
+                    <div class="fw-bold small">Marc Dupont</div>
+                    <div class="text-muted xsmall">Lead Recruiter @Google</div>
+                  </div>
+                  <button class="btn btn-outline-primary btn-sm">
+                    <i class="bi bi-plus-lg"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Premium Card -->
+        <div class="sidebar-card" style="background: linear-gradient(135deg, #fef3e2 0%, #f8e5c5 100%); border-color: #e6b36b;">
+          <div class="p-3">
+            <div class="d-flex align-items-center mb-2">
+              <i class="bi bi-gem text-warning me-2"></i>
+              <span class="fw-bold" style="color: #8a4c05;">Premium Career</span>
+            </div>
+            <p class="small mb-3" style="color: #8a4c05;">
+              Voyez qui consulte votre profil, postulez en priorité et multipliez vos chances.
+            </p>
+            <button class="btn btn-warning btn-sm w-100 fw-bold">
+              Essayer gratuitement
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Assistant UI -->
+<div class="assistant-backdrop" id="assistantBackdrop" aria-hidden="true"></div>
+<section class="assistant-panel" id="assistantPanel" role="dialog" aria-modal="true" aria-label="Assistant">
+  <div class="assistant-header">
+    <div class="assistant-title">
+      <i class="bi bi-stars" aria-hidden="true"></i>
+      <span>Assistant</span>
+    </div>
+    <button type="button" class="assistant-close" id="assistantClose" aria-label="Fermer">
+      <i class="bi bi-x-lg" aria-hidden="true"></i>
+    </button>
+  </div>
+  <div class="assistant-body">
+    <div class="assistant-messages" id="assistantMessages"></div>
+    <div class="assistant-inputRow">
+      <input class="assistant-input" id="assistantInput" placeholder="Écris ta question…" />
+      <button class="assistant-send" id="assistantSend" type="button">Envoyer</button>
+    </div>
+    <div class="assistant-hint">
+      Modèle:
+      <select id="assistantModel" class="form-select form-select-sm d-inline-block" style="width: auto; vertical-align: middle;">
+        <option value="llama3" selected>llama3</option>
+        <option value="mistral">mistral</option>
+      </select>
+      (Ollama doit tourner sur le port 11434)
+    </div>
+  </div>
+</section>
+<button type="button" class="assistant-fab" id="assistantFab" aria-label="Ouvrir l’assistant" title="Assistant">
+  <i class="bi bi-robot" aria-hidden="true"></i>
+</button>
+
+<!-- Job Details Modal -->
+<div id="jobModal" class="job-modal">
+  <div class="modal-content">
+    <button class="close-modal" onclick="closeJobModal()">
+      <i class="bi bi-x-lg"></i>
+    </button>
+
+    <div class="modal-header">
+      <div class="d-flex align-items-start gap-4">
+        <div class="company-logo-large" id="modalLogo">J</div>
+        <div class="flex-grow-1">
+          <h2 class="fw-bold mb-2" id="modalTitle">Titre du poste</h2>
+          <div class="d-flex align-items-center flex-wrap gap-2 mb-3">
+            <span class="fw-bold text-primary" id="modalCompany">Nom de l'entreprise</span>
+            <span class="text-muted">•</span>
+            <span class="text-muted" id="modalLocation">
+              <i class="bi bi-geo-alt me-1"></i>Localisation
+            </span>
+            <span class="text-muted">•</span>
+            <span class="text-muted" id="modalPostedDate">Publié aujourd'hui</span>
+          </div>
+          <div class="d-flex flex-wrap gap-2">
+            <span class="badge bg-light text-dark border px-3 py-2">
+              <i class="bi bi-briefcase me-1"></i> <span id="modalWorkType">Temps plein</span>
+            </span>
+            <span class="badge bg-light text-dark border px-3 py-2">
+              <i class="bi bi-clock me-1"></i> <span id="modalSchedule">Standard</span>
+            </span>
+            <span class="badge bg-light text-dark border px-3 py-2">
+              <i class="bi bi-cash-coin me-1"></i> <span id="modalSalary">Salaire compétitif</span>
+            </span>
+            <span class="badge bg-light text-dark border px-3 py-2">
+              <i class="bi bi-people me-1"></i> <span id="modalExperience">3-5 ans</span>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-body">
+      <div class="job-detail-grid">
+        <!-- Main Content -->
+        <div class="job-main-content">
+          <!-- Job Description -->
+          <div class="detail-section">
+            <h3><i class="bi bi-card-text"></i> Description du poste</h3>
+            <p id="modalDescription" class="mb-0">Description détaillée du poste...</p>
+          </div>
+
+          <!-- Responsibilities -->
+          <div class="detail-section">
+            <h3><i class="bi bi-list-task"></i> Responsabilités</h3>
+            <ul class="requirements-list" id="modalResponsibilities">
+              <li>Responsabilité principale 1</li>
+              <li>Responsabilité principale 2</li>
+              <li>Responsabilité principale 3</li>
+            </ul>
+          </div>
+
+          <!-- Requirements -->
+          <div class="detail-section">
+            <h3><i class="bi bi-check-circle"></i> Exigences & Compétences</h3>
+            <ul class="requirements-list" id="modalRequirements">
+              <li>Compétence technique 1</li>
+              <li>Compétence technique 2</li>
+              <li>Compétence technique 3</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Sidebar -->
+        <div class="job-sidebar">
+          <!-- Match Score -->
+          <div class="detail-section" style="background: linear-gradient(135deg, var(--linkedin-green) 0%, #00a86b 100%); color: white;">
+            <div class="text-center">
+              <div class="score" id="modalMatchScore" style="font-size: 48px; font-weight: 700; line-height: 1; margin-bottom: 8px;">92%</div>
+              <div class="label" style="font-size: 14px; opacity: 0.9;">Correspondance avec votre profil</div>
+            </div>
+          </div>
+
+          <!-- Company Info -->
+          <div class="detail-section">
+            <h3><i class="bi bi-building"></i> Entreprise</h3>
+            <div class="mt-3">
+              <div class="fw-bold mb-1" id="modalCompanyName">Entreprise</div>
+              <div class="text-muted small mb-2" id="modalCompanySize">50-200 employés</div>
+              <p class="small mb-3" id="modalCompanyDescription">
+                Description de l'entreprise...
+              </p>
+            </div>
+          </div>
+
+          <!-- Recruiter Info -->
+          <div class="detail-section">
+            <h3><i class="bi bi-person-badge"></i> Recruteur</h3>
+            <div class="d-flex align-items-center gap-3 mt-3">
+              <div class="profile-avatar" style="width: 48px; height: 48px; font-size: 18px;">
+                <span id="modalRecruiterInitial">R</span>
+              </div>
+              <div>
+                <div class="fw-bold" id="modalRecruiterName">Nom du recruteur</div>
+                <div class="text-muted small" id="modalRecruiterRole">Responsable recrutement</div>
+                <div class="text-muted small">
+                  <i class="bi bi-clock me-1"></i>Réponse sous 48h
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn btn-outline-secondary" onclick="closeJobModal()">
+        <i class="bi bi-x-lg me-2"></i>Fermer
+      </button>
+      <button class="btn btn-saved" id="modalSaveBtn">
+        <i class="bi bi-bookmark"></i>
+      </button>
+      <button class="btn btn-apply" id="modalApplyBtn">
+        <i class="bi bi-send-check me-2"></i>Postuler maintenant
+      </button>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+  // Initialize
+  let user = JSON.parse(localStorage.getItem("user"));
+  if(!user) window.location.href = "index.html";
+
+  let allJobs = [];
+  let currentTab = 'all';
+  let posts = [];
+  let likedPosts = new Set();
+
+  // Sample static posts data
+  const samplePosts = [
+    {
+      id: 1,
+      author: "Marie Dubois",
+      title: "Développeuse Full Stack",
+      content: "Je recherche activement un poste de développeuse React/Node.js en remote. 3 ans d'expérience dans le e-commerce. J'ai travaillé sur des projets à grande échelle avec des équipes internationales. Open to opportunities! 🚀",
+      time: "Il y a 2 heures",
+      likes: 24,
+      comments: 8,
+      shares: 3,
+      tags: ["RechercheEmploi", "React", "NodeJS", "Remote", "TechJobs"]
+    },
+    {
+      id: 2,
+      author: "Thomas Martin",
+      title: "CTO @StartupTech",
+      content: "Nous recrutons un DevOps Engineer senior pour rejoindre notre équipe. Stack: AWS, Kubernetes, Terraform, Docker. Environnement stimulant avec de vrais challenges techniques. Culture d'apprentissage continue et d'innovation. DM ouvert!",
+      time: "Il y a 4 heures",
+      likes: 42,
+      comments: 15,
+      shares: 6,
+      tags: ["Recrutement", "DevOps", "AWS", "Kubernetes", "Hiring"]
+    },
+    {
+      id: 3,
+      author: "Sophie Leroy",
+      title: "Lead Product Designer",
+      content: "Juste fini un entretien technique très intense avec une FAANG! Tips: 1) Bien réviser les algos de base 2) Être prêt à expliquer ses choix de design en détail 3) Préparer des questions intelligentes pour l'interviewer 4) Rester calme et structuré. Bon courage à tous ceux en recherche! 💪",
+      time: "Il y a 1 jour",
+      likes: 56,
+      comments: 23,
+      shares: 12,
+      tags: ["Carrière", "TechInterview", "Design", "Conseils", "FAANG"]
+    },
+    {
+      id: 4,
+      author: "Alexandre Chen",
+      title: "Senior Data Scientist",
+      content: "Partage d'une opportunité: Ma boîte recrute des Data Scientists/ML Engineers. Stack: Python, PyTorch, TensorFlow, BigQuery, Spark. Très bonne ambiance, projets innovants dans le domaine de la santé tech, et package compétitif. Référencez-moi si intéressé!",
+      time: "Il y a 2 jours",
+      likes: 31,
+      comments: 7,
+      shares: 4,
+      tags: ["DataScience", "MachineLearning", "Recrutement", "Python", "HealthTech"]
+    },
+    {
+      id: 5,
+      author: "Camille Rousseau",
+      title: "Engineering Manager",
+      content: "Après 5 ans dans ma startup, je recherche un nouveau challenge en tant que EM. Spécialisée dans le scaling d'équipes techniques (de 5 à 30 personnes). Passionnée par le mentoring et le développement produit. Open to discussing opportunities!",
+      time: "Il y a 3 jours",
+      likes: 18,
+      comments: 5,
+      shares: 2,
+      tags: ["EngineeringManager", "Leadership", "Tech", "Startup", "Management"]
+    }
+  ];
+
+  // Update profile info on load
+  document.addEventListener('DOMContentLoaded', function() {
+    updateProfileInfo();
+    loadContent();
+    initTheme();
+  });
+
+  function updateProfileInfo() {
+    if(user) {
+      const initial = user.name ? user.name.charAt(0).toUpperCase() : 'U';
+      document.getElementById('uAvatar').textContent = initial;
+      document.getElementById('navAvatar').textContent = initial;
+      document.getElementById('navAvatarLarge').textContent = initial;
+      document.getElementById('postAvatar').textContent = initial;
+      document.getElementById('uName').textContent = user.name || 'Utilisateur';
+      document.getElementById('navName').textContent = user.name || 'Utilisateur';
+      document.getElementById('uTitle').textContent = user.title || 'Développeur Full Stack';
+      document.getElementById('navTitle').textContent = user.title || 'Développeur Full Stack';
+
+      // Update stats
+      document.getElementById('uViews').textContent = user.profileViews || '128';
+      document.getElementById('uApplications').textContent = (user.appliedJobs || []).length;
+      document.getElementById('uSaved').textContent = (user.savedJobs || []).length;
+      document.getElementById('uConnections').textContent = user.connections || '245';
+    }
+  }
+
+  function initTheme() {
+    const theme = localStorage.getItem('theme') || 'light';
+    document.documentElement.setAttribute('data-bs-theme', theme);
+    updateThemeIcon(theme);
+  }
+
+  function toggleTheme() {
+    const currentTheme = document.documentElement.getAttribute('data-bs-theme');
+    const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+    document.documentElement.setAttribute('data-bs-theme', newTheme);
+    localStorage.setItem('theme', newTheme);
+    updateThemeIcon(newTheme);
+  }
+
+  function updateThemeIcon(theme) {
+    const icon = document.querySelector('.theme-toggle i');
+    icon.className = theme === 'light' ? 'bi bi-moon-fill' : 'bi bi-sun-fill';
+  }
+
+  async function loadContent() {
+    try {
+      const container = document.getElementById('jobsList');
+      const socialFeed = document.getElementById('socialFeed');
+
+      // Show loading skeletons
+      container.innerHTML = createLoadingShimmer(3);
+      socialFeed.innerHTML = '';
+
+      // Simulate API call for jobs
+      setTimeout(async () => {
+        const response = await fetch(`/api/recommendations/${user.id}`);
+        allJobs = await response.json();
+        posts = samplePosts;
+        renderContent();
+      }, 800);
+    } catch(error) {
+      console.error('Error loading content:', error);
+      showToast('Erreur de chargement du contenu', 'error');
+    }
+  }
+
+  function createLoadingShimmer(count) {
+    let html = '';
+    for(let i = 0; i < count; i++) {
+      html += `<div class="job-card loading-shimmer" style="height: 180px;"></div>`;
+    }
+    return html;
+  }
+
+  function renderContent() {
+    const jobsContainer = document.getElementById('jobsList');
+    const socialFeed = document.getElementById('socialFeed');
+    const noResults = document.getElementById('noResults');
+    const feedTitle = document.getElementById('feedTitle');
+    const feedSubtitle = document.getElementById('feedSubtitle');
+    const createPostSection = document.getElementById('createPostSection');
+
+    // Update feed titles
+    switch(currentTab) {
+      case 'all':
+        feedTitle.textContent = 'Votre fil d\'actualité';
+        feedSubtitle.textContent = 'Mélange d\'offres et de discussions';
+        createPostSection.style.display = 'flex';
+        break;
+      case 'jobs':
+        feedTitle.textContent = 'Offres d\'emploi';
+        feedSubtitle.textContent = 'Basé sur votre profil et vos compétences';
+        createPostSection.style.display = 'none';
+        break;
+      case 'posts':
+        feedTitle.textContent = 'Discussions du réseau';
+        feedSubtitle.textContent = 'Posts de votre communauté professionnelle';
+        createPostSection.style.display = 'flex';
+        break;
+      case 'saved':
+        feedTitle.textContent = 'Contenu enregistré';
+        feedSubtitle.textContent = 'Offres et posts que vous avez sauvegardés';
+        createPostSection.style.display = 'none';
+        break;
+      case 'applied':
+        feedTitle.textContent = 'Candidatures envoyées';
+        feedSubtitle.textContent = 'Offres auxquelles vous avez postulé';
+        createPostSection.style.display = 'none';
+        break;
+    }
+
+    if(currentTab === 'posts') {
+      jobsContainer.style.display = 'none';
+      socialFeed.style.display = 'block';
+      socialFeed.innerHTML = posts.map(post => createPostCard(post)).join('');
+    } else if(currentTab === 'all') {
+      jobsContainer.style.display = 'block';
+      socialFeed.style.display = 'block';
+      // Show mixed content
+      renderMixedContent();
+    } else {
+      jobsContainer.style.display = 'block';
+      socialFeed.style.display = 'none';
+      renderJobs();
+    }
+
+    // Show/hide no results
+    const hasContent = (currentTab === 'posts' && posts.length > 0) ||
+            (currentTab !== 'posts' && allJobs.length > 0);
+    if(hasContent) {
+      noResults.classList.add('d-none');
+    } else {
+      noResults.classList.remove('d-none');
+    }
+  }
+
+  function renderMixedContent() {
+    const jobsContainer = document.getElementById('jobsList');
+    const socialFeed = document.getElementById('socialFeed');
+    const searchVal = document.getElementById('searchInput')?.value.toLowerCase() || '';
+
+    const savedIds = (user.savedJobs || []).map(j => j.id);
+    const appliedIds = (user.appliedJobs || []).map(j => j.id);
+
+    // Filter jobs
+    let filteredJobs = allJobs.filter(job => {
+      const searchMatch = job.title.toLowerCase().includes(searchVal) ||
+              (job.companyName && job.companyName.toLowerCase().includes(searchVal));
+      return searchMatch;
+    });
+
+    // Take first 2 jobs
+    const jobsToShow = filteredJobs.slice(0, 2);
+
+    // Take first 2 posts
+    const postsToShow = posts.slice(0, 2);
+
+    // Render jobs
+    jobsContainer.innerHTML = jobsToShow.map(job => createJobCard(job, savedIds, appliedIds)).join('');
+
+    // Render posts
+    socialFeed.innerHTML = postsToShow.map(post => createPostCard(post)).join('');
+
+    // If there are more jobs or posts, add a "Show more" button
+    if(filteredJobs.length > 2 || posts.length > 2) {
+      socialFeed.innerHTML += `
+        <div class="text-center mt-4">
+          <button class="btn btn-outline-primary" onclick="setTab('jobs')">
+            Voir plus d'offres <i class="bi bi-arrow-right ms-1"></i>
+          </button>
+          <button class="btn btn-outline-secondary ms-2" onclick="setTab('posts')">
+            Voir plus de posts <i class="bi bi-arrow-right ms-1"></i>
+          </button>
+        </div>
+      `;
+    }
+  }
+
+  function renderJobs() {
+    const container = document.getElementById('jobsList');
+    const searchVal = document.getElementById('searchInput')?.value.toLowerCase() || '';
+
+    const savedIds = (user.savedJobs || []).map(j => j.id);
+    const appliedIds = (user.appliedJobs || []).map(j => j.id);
+
+    // Filter jobs
+    let filtered = allJobs.filter(job => {
+      const searchMatch = job.title.toLowerCase().includes(searchVal) ||
+              (job.companyName && job.companyName.toLowerCase().includes(searchVal)) ||
+              (job.description && job.description.toLowerCase().includes(searchVal));
+
+      switch(currentTab) {
+        case 'saved':
+          return savedIds.includes(job.id) && searchMatch;
+        case 'applied':
+          return appliedIds.includes(job.id) && searchMatch;
+        case 'recent':
+          return searchMatch;
+        case 'jobs':
+        case 'all':
+          return searchMatch;
+        default:
+          return searchMatch;
+      }
+    });
+
+    // Sort recent jobs
+    if(currentTab === 'recent') {
+      filtered.sort((a, b) => new Date(b.postedDate) - new Date(a.postedDate));
+    }
+
+    // Render jobs
+    container.innerHTML = filtered.map(job => createJobCard(job, savedIds, appliedIds)).join('');
+  }
+
+  function createJobCard(job, savedIds, appliedIds) {
+    const isSaved = savedIds.includes(job.id);
+    const isApplied = appliedIds.includes(job.id);
+    const isNew = isJobNew(job.postedDate);
+    const initial = job.companyName ? job.companyName.charAt(0).toUpperCase() : "J";
+    const matchScore = calculateMatchScore(job);
+
+    return `
+      <div class="job-card ${isNew ? 'new' : ''}" onclick="viewJobDetails(${job.id})">
+        <div class="d-flex">
+          <div class="company-logo">${initial}</div>
+          <div class="flex-grow-1">
+            <div class="d-flex justify-content-between align-items-start">
+              <div>
+                <h4 class="job-title">${job.title}</h4>
+                <p class="job-meta">${job.companyName || "Entreprise"}</p>
+                <p class="job-meta">
+                  <span class="job-location">
+                    <i class="bi bi-geo-alt me-1"></i>${job.location || "Remote"}
+                  </span>
+                  • ${formatDate(job.postedDate)}
+                  ${isApplied ? '<span class="text-success ms-2"><i class="bi bi-check-circle"></i> Postulé</span>' : ''}
+                </p>
+              </div>
+              <button class="btn-saved ${isSaved ? 'active' : ''}" onclick="event.stopPropagation(); toggleSave(${job.id})">
+                <i class="bi bi-bookmark${isSaved ? '-fill' : ''}"></i>
+              </button>
+            </div>
+
+            <div class="d-flex align-items-center mb-2">
+              <div class="progress flex-grow-1 me-2" style="height: 6px;">
+                <div class="progress-bar bg-success" style="width: ${matchScore}%"></div>
+              </div>
+              <small class="fw-bold text-success">${matchScore}% match</small>
+            </div>
+
+            <div class="d-flex flex-wrap gap-2 mb-3">
+              <span class="badge bg-light text-dark border">${job.workType || "Temps plein"}</span>
+              <span class="badge bg-light text-dark border">${job.schedule || "Standard"}</span>
+              ${job.salary ? `<span class="badge bg-light text-dark border">${job.salary}</span>` : ''}
+            </div>
+
+            <p class="text-muted small mb-3" style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
+              ${job.description || "Description non disponible"}
+            </p>
+
+            <div class="d-flex justify-content-between align-items-center mt-3">
+              <div class="text-muted small">
+                <i class="bi bi-person-check me-1"></i>
+                ${job.recruiterName || "Recruteur"}
+              </div>
+              ${!isApplied ? `
+                <button class="btn-apply btn-sm" onclick="event.stopPropagation(); apply(${job.id})">
+                  <i class="bi bi-send-check me-2"></i>Postuler
+                </button>
+              ` : `
+                <button class="btn btn-outline-success btn-sm rounded-pill" disabled>
+                  <i class="bi bi-check-lg me-1"></i>Postulé
+                </button>
+              `}
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  function createPostCard(post) {
+    const isLiked = likedPosts.has(post.id);
+
+    return `
+      <div class="post-card">
+        <div class="post-header">
+          <div class="post-avatar">${post.author.charAt(0)}</div>
+          <div class="flex-grow-1">
+            <div class="post-author">${post.author}</div>
+            <div class="post-title">${post.title}</div>
+            <div class="post-meta">
+              <span>${post.time}</span>
+              <i class="bi bi-dot"></i>
+              <span><i class="bi bi-globe"></i></span>
+            </div>
+          </div>
+          <button class="btn btn-link text-muted p-0" style="font-size: 20px;">
+            <i class="bi bi-three-dots"></i>
+          </button>
+        </div>
+
+        <div class="post-content">
+          ${post.content}
+        </div>
+
+        <div class="post-tags">
+          ${post.tags.map(tag => `<span class="post-tag">#${tag}</span>`).join('')}
+        </div>
+
+        <div class="post-actions">
+          <button class="post-action ${isLiked ? 'liked' : ''}" onclick="toggleLike(${post.id})">
+            <i class="bi bi-hand-thumbs-up${isLiked ? '-fill' : ''}"></i>
+            <span class="count">${post.likes + (isLiked ? 1 : 0)}</span>
+          </button>
+          <button class="post-action" onclick="commentOnPost(${post.id})">
+            <i class="bi bi-chat"></i>
+            <span class="count">${post.comments}</span>
+          </button>
+          <button class="post-action" onclick="sharePost(${post.id})">
+            <i class="bi bi-share"></i>
+            <span class="count">${post.shares}</span>
+          </button>
+          <button class="post-action" onclick="savePost(${post.id})">
+            <i class="bi bi-bookmark"></i>
+          </button>
+        </div>
+      </div>
+    `;
+  }
+
+  function toggleLike(postId) {
+    if(likedPosts.has(postId)) {
+      likedPosts.delete(postId);
+    } else {
+      likedPosts.add(postId);
+    }
+    renderContent();
+    showToast(likedPosts.has(postId) ? "Post liké!" : "Like retiré", "success");
+  }
+
+  function commentOnPost(postId) {
+    const comment = prompt("Ajoutez un commentaire :");
+    if(comment) {
+      showToast("Commentaire ajouté!", "success");
+    }
+  }
+
+  function sharePost(postId) {
+    showToast("Post partagé avec succès!", "success");
+  }
+
+  function savePost(postId) {
+    showToast("Post enregistré dans vos favoris!", "info");
+  }
+
+  function showCreatePost() {
+    const createPostSection = document.getElementById('createPostSection');
+    createPostSection.style.display = createPostSection.style.display === 'none' ? 'flex' : 'none';
+  }
+
+  function createPost() {
+    const postInput = document.getElementById('postInput');
+    const content = postInput.value.trim();
+
+    if(!content) {
+      showToast("Veuillez entrer du contenu pour votre post", "error");
+      return;
+    }
+
+    // Create new post
+    const newPost = {
+      id: posts.length + 1,
+      author: user.name || "Utilisateur",
+      title: user.title || "Professionnel",
+      content: content,
+      time: "À l'instant",
+      likes: 0,
+      comments: 0,
+      shares: 0,
+      tags: ["NouveauPost", "Network"]
+    };
+
+    posts.unshift(newPost); // Add at beginning
+    postInput.value = "";
+    showCreatePost();
+    renderContent();
+    showToast("Post créé avec succès!", "success");
+  }
+
+  function setTab(tab) {
+    currentTab = tab;
+
+    // Update UI
+    document.querySelectorAll('.sort-tab').forEach(el => el.classList.remove('active'));
+    document.getElementById(`tab-${tab}`).classList.add('active');
+
+    // Update navbar
+    document.querySelectorAll('.nav-icon').forEach(el => el.classList.remove('active'));
+    if(tab === 'network') {
+      document.querySelector('.nav-icon:nth-child(2)').classList.add('active');
+    } else if(tab === 'posts') {
+      document.querySelector('.nav-icon:nth-child(4)').classList.add('active');
+    } else {
+      document.querySelector('.nav-icon:nth-child(1)').classList.add('active');
+    }
+
+    renderContent();
+  }
+
+  function viewJobDetails(jobId) {
+    const job = allJobs.find(j => j.id === jobId);
+    if(!job) return;
+
+    const savedIds = (user.savedJobs || []).map(j => j.id);
+    const appliedIds = (user.appliedJobs || []).map(j => j.id);
+    const isSaved = savedIds.includes(jobId);
+    const isApplied = appliedIds.includes(jobId);
+    const matchScore = calculateMatchScore(job);
+
+    // Populate modal header
+    document.getElementById('modalLogo').textContent = job.companyName ? job.companyName.charAt(0).toUpperCase() : "J";
+    document.getElementById('modalTitle').textContent = job.title;
+    document.getElementById('modalCompany').textContent = job.companyName || "Entreprise";
+    document.getElementById('modalCompanyName').textContent = job.companyName || "Entreprise";
+    document.getElementById('modalLocation').innerHTML = `<i class="bi bi-geo-alt me-1"></i>${job.location || "Remote"}`;
+    document.getElementById('modalPostedDate').textContent = formatDate(job.postedDate);
+    document.getElementById('modalWorkType').textContent = job.workType || "Temps plein";
+    document.getElementById('modalSchedule').textContent = job.schedule || "Standard";
+    document.getElementById('modalSalary').textContent = job.salary || "Salaire compétitif";
+    document.getElementById('modalExperience').textContent = job.experience || "3-5 ans";
+    document.getElementById('modalDescription').textContent = job.description || "Description détaillée non disponible";
+    document.getElementById('modalMatchScore').textContent = `${matchScore}%`;
+
+    // Populate lists
+    populateList('modalResponsibilities', job.responsibilities || [
+      "Développer et maintenir des applications web modernes",
+      "Collaborer avec l'équipe produit et design",
+      "Participer aux revues de code et aux sessions de pairing",
+      "Optimiser les performances des applications",
+      "Documenter les processus techniques"
+    ]);
+
+    populateList('modalRequirements', job.requirements || [
+      "Expérience en développement web (3-5 ans minimum)",
+      "Maîtrise de JavaScript/TypeScript et React.js",
+      "Connaissance des architectures microservices",
+      "Expérience avec les bases de données SQL/NoSQL",
+      "Bonnes pratiques de développement (clean code, tests)"
+    ]);
+
+    // Company info
+    document.getElementById('modalCompanySize').textContent = job.companySize || "50-200 employés";
+    document.getElementById('modalCompanyDescription').textContent =
+            job.companyDescription || "Entreprise innovante dans le secteur technologique, valorisant l'excellence technique et l'esprit d'équipe.";
+
+    // Recruiter info
+    const recruiterInitial = job.recruiterName ? job.recruiterName.charAt(0).toUpperCase() : "R";
+    document.getElementById('modalRecruiterInitial').textContent = recruiterInitial;
+    document.getElementById('modalRecruiterName').textContent = job.recruiterName || "Recruteur principal";
+    document.getElementById('modalRecruiterRole').textContent = job.recruiterRole || "Responsable recrutement";
+
+    // Update buttons
+    const saveBtn = document.getElementById('modalSaveBtn');
+    const applyBtn = document.getElementById('modalApplyBtn');
+
+    saveBtn.innerHTML = `<i class="bi bi-bookmark${isSaved ? '-fill' : ''}"></i>`;
+    saveBtn.onclick = (e) => {
+      e.stopPropagation();
+      toggleSave(jobId);
+      saveBtn.innerHTML = `<i class="bi bi-bookmark${!isSaved ? '-fill' : ''}"></i>`;
+    };
+
+    applyBtn.disabled = isApplied;
+    applyBtn.innerHTML = isApplied ?
+            '<i class="bi bi-check-lg me-2"></i>Déjà postulé' :
+            '<i class="bi bi-send-check me-2"></i>Postuler maintenant';
+    applyBtn.onclick = (e) => {
+      e.stopPropagation();
+      apply(jobId);
+    };
+
+    // Show modal
+    document.getElementById('jobModal').classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeJobModal() {
+    document.getElementById('jobModal').classList.remove('active');
+    document.body.style.overflow = 'auto';
+  }
+
+  function populateList(elementId, items) {
+    const container = document.getElementById(elementId);
+    container.innerHTML = items.map(item => `<li>${item}</li>`).join('');
+  }
+
+  function calculateMatchScore(job) {
+    // Simple match score calculation based on job requirements vs user skills
+    const userSkills = user.skills || [];
+    const jobSkills = job.requiredSkills || ["React", "JavaScript", "Node.js", "TypeScript"];
+
+    const matches = jobSkills.filter(skill =>
+            userSkills.some(userSkill =>
+                    userSkill.name.toLowerCase().includes(skill.toLowerCase()) ||
+                    skill.toLowerCase().includes(userSkill.name.toLowerCase())
+            )
+    );
+
+    return Math.min(100, Math.floor((matches.length / jobSkills.length) * 100) + 20);
+  }
+
+  async function toggleSave(jobId) {
+    try {
+      const response = await fetch(`/api/candidates/${user.id}/save/${jobId}`, {
+        method: "POST"
+      });
+
+      if(response.ok) {
+        user = await response.json();
+        localStorage.setItem("user", JSON.stringify(user));
+        updateProfileInfo();
+        renderContent();
+
+        const isSaved = (user.savedJobs || []).some(j => j.id === jobId);
+        showToast(isSaved ? "Offre enregistrée" : "Offre retirée", "success");
+      }
+    } catch(error) {
+      console.error('Error saving job:', error);
+      showToast("Erreur lors de l'opération", "error");
+    }
+  }
+
+  async function apply(jobId) {
+    if(!confirm("Postuler à cette offre ? Votre profil sera envoyé au recruteur.")) return;
+
+    try {
+      const response = await fetch(`/api/apply/${user.id}/${jobId}`, {
+        method: "POST"
+      });
+
+      if(response.ok) {
+        user = await response.json();
+        localStorage.setItem("user", JSON.stringify(user));
+        updateProfileInfo();
+        renderContent();
+        closeJobModal();
+        showToast("Candidature envoyée avec succès !", "success");
+      }
+    } catch(error) {
+      console.error('Error applying:', error);
+      showToast("Erreur lors de la candidature", "error");
+    }
+  }
+
+  function filterJobs() {
+    renderContent();
+  }
+
+  function resetFilters() {
+    document.getElementById('searchInput').value = '';
+    setTab('all');
+  }
+
+  function formatDate(dateString) {
+    if(!dateString) return "Récemment";
+    const date = new Date(dateString);
+    const now = new Date();
+    const diff = now - date;
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+
+    if(days === 0) return "Aujourd'hui";
+    if(days === 1) return "Hier";
+    if(days < 7) return `Il y a ${days} jours`;
+    if(days < 30) return `Il y a ${Math.floor(days/7)} semaines`;
+    return date.toLocaleDateString('fr-FR');
+  }
+
+  function isJobNew(dateString) {
+    if(!dateString) return false;
+    const date = new Date(dateString);
+    const now = new Date();
+    const diff = now - date;
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    return days < 3;
+  }
+
+  function showToast(message, type = "info") {
+    // Create toast element
+    const toast = document.createElement('div');
+    const bgColor = type === 'error' ? 'bg-danger' : type === 'success' ? 'bg-success' : 'bg-dark';
+
+    toast.className = `toast align-items-center text-white ${bgColor} border-0 position-fixed bottom-0 end-0 m-3`;
+    toast.setAttribute('role', 'alert');
+    toast.innerHTML = `
+      <div class="d-flex">
+        <div class="toast-body">
+          <i class="bi ${type === 'success' ? 'bi-check-circle' : type === 'error' ? 'bi-exclamation-triangle' : 'bi-info-circle'} me-2"></i>
+          ${message}
+        </div>
+        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+      </div>
+    `;
+
+    document.body.appendChild(toast);
+
+    // Initialize and show toast
+    const bsToast = new bootstrap.Toast(toast);
+    bsToast.show();
+
+    // Remove toast after it hides
+    toast.addEventListener('hidden.bs.toast', function() {
+      document.body.removeChild(toast);
+    });
+  }
+
+  function logout() {
+    localStorage.clear();
+    window.location.href = "index.html";
+  }
+
+  // Close modal on escape key
+  document.addEventListener('keydown', (e) => {
+    if(e.key === 'Escape' && document.getElementById('jobModal').classList.contains('active')) {
+      closeJobModal();
+    }
+  });
+
+  // Close modal when clicking outside
+  document.getElementById('jobModal').addEventListener('click', (e) => {
+    if(e.target === document.getElementById('jobModal')) {
+      closeJobModal();
+    }
+  });
+
+</script>
+<script src="assistant.js"></script>
+</body>
+</html>

@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profil - JobMatcher</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+
+    <style>
+        /* --- CSS Variables & Reset --- */
+        :root {
+            --li-blue: #0a66c2;
+            --li-blue-dark: #004182;
+            --li-blue-light: #70b5f9;
+            --li-gray-bg: #f3f2ef;
+            --li-gray-border: #e0dfdc;
+            --li-text-gray: #666666;
+            --li-card-bg: #ffffff;
+            --li-shadow: 0 1px 3px rgba(0,0,0,0.08);
+            --li-shadow-hover: 0 4px 12px rgba(0,0,0,0.15);
+            --li-font: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+        }
+
+        body {
+            background-color: var(--li-gray-bg);
+            font-family: var(--li-font);
+            padding-top: 52px;
+            color: rgba(0,0,0,0.9);
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* --- Navbar --- */
+        .navbar-linkedin {
+            background: var(--li-card-bg);
+            border-bottom: 1px solid var(--li-gray-border);
+            height: 52px;
+            padding: 0 24px;
+            box-shadow: var(--li-shadow);
+        }
+
+        .navbar-brand-linkedin {
+            color: var(--li-blue) !important;
+            font-size: 2.2rem;
+            font-weight: 700;
+            line-height: 0;
+            margin-right: 24px;
+        }
+
+        .nav-icon {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: var(--li-text-gray);
+            text-decoration: none;
+            min-width: 80px;
+            font-size: 12px;
+            padding: 4px 0;
+            position: relative;
+            transition: color 0.2s;
+        }
+
+        .nav-icon:hover, .nav-icon.active { color: #191919; }
+        .nav-icon i { font-size: 20px; margin-bottom: 2px; }
+
+        .nav-icon.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: #191919;
+        }
+
+        /* --- Layout & Cards --- */
+        .profile-container { max-width: 1128px; margin: 0 auto; padding: 24px 0; }
+
+        .profile-card {
+            background: var(--li-card-bg);
+            border-radius: 8px;
+            border: 1px solid var(--li-gray-border);
+            margin-bottom: 16px;
+            position: relative;
+            box-shadow: var(--li-shadow);
+            overflow: hidden;
+        }
+
+        /* --- Cover & Header --- */
+        .profile-cover {
+            height: 200px;
+            background: linear-gradient(135deg, #004182, #0a66c2);
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+
+        .profile-avatar-wrapper {
+            padding: 0 24px;
+            position: relative;
+            top: -100px;
+            margin-bottom: -80px;
+        }
+
+        .profile-avatar {
+            width: 160px;
+            height: 160px;
+            border-radius: 50%;
+            border: 4px solid var(--li-card-bg);
+            background-color: var(--li-blue);
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 64px;
+            color: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .profile-info { padding: 24px; padding-top: 12px; }
+
+        .profile-name { font-size: 24px; font-weight: 600; margin: 0; display: inline-block;}
+        .profile-headline { font-size: 16px; color: #191919; margin-top: 4px; }
+        .profile-location { font-size: 14px; color: var(--li-text-gray); margin-top: 4px; }
+
+        .contact-info {
+            font-size: 14px;
+            color: var(--li-blue);
+            font-weight: 600;
+            margin-top: 8px;
+            cursor: pointer;
+        }
+
+        .profile-actions { margin-top: 16px; display: flex; gap: 8px; }
+
+        /* --- Buttons --- */
+        .btn-li-primary {
+            background-color: var(--li-blue);
+            color: white;
+            border-radius: 24px;
+            padding: 6px 16px;
+            font-weight: 600;
+            border: none;
+            transition: background 0.2s;
+        }
+        .btn-li-primary:hover { background-color: var(--li-blue-dark); color: white; }
+
+        .btn-li-outline {
+            background-color: transparent;
+            color: var(--li-blue);
+            border: 1px solid var(--li-blue);
+            border-radius: 24px;
+            padding: 6px 16px;
+            font-weight: 600;
+            transition: background 0.2s, box-shadow 0.2s;
+        }
+        .btn-li-outline:hover {
+            background-color: rgba(112, 181, 249, 0.15);
+            box-shadow: inset 0 0 0 1px var(--li-blue);
+        }
+
+        .btn-li-gray {
+            background-color: transparent;
+            color: var(--li-text-gray);
+            border: 1px solid var(--li-text-gray);
+            border-radius: 24px;
+            padding: 6px 16px;
+            font-weight: 600;
+        }
+        .btn-li-gray:hover { background-color: rgba(0,0,0,0.05); color: #191919; border-color: #191919; }
+
+        /* --- Sections Generic --- */
+        .section-header {
+            padding: 20px 24px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .section-title { font-size: 20px; font-weight: 600; color: #191919; margin: 0; }
+        .section-body { padding: 20px 24px; }
+
+        /* --- Skills Badges --- */
+        .skills-grid { display: flex; flex-wrap: wrap; gap: 10px; }
+
+        .skill-pill {
+            display: inline-flex;
+            align-items: center;
+            padding: 8px 16px;
+            border-radius: 24px;
+            border: 1px solid var(--li-gray-border);
+            background: white;
+            font-weight: 600;
+            color: #191919;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+        .skill-pill:hover { border-color: #191919; background-color: rgba(0,0,0,0.02); }
+        .skill-remove { margin-left: 8px; color: var(--li-text-gray); cursor: pointer; }
+        .skill-remove:hover { color: #cc1016; }
+
+        /* --- Stats --- */
+        .stats-container { display: flex; border-radius: 8px; overflow: hidden; border: 1px solid var(--li-gray-border); }
+        .stat-box { flex: 1; padding: 16px; text-align: left; background: white; border-right: 1px solid var(--li-gray-border); }
+        .stat-box:last-child { border-right: none; }
+        .stat-num { font-size: 24px; color: var(--li-blue); font-weight: 300; display: block; }
+        .stat-text { font-size: 14px; color: var(--li-text-gray); }
+
+        /* --- CV Upload --- */
+        .cv-dropzone {
+            border: 2px dashed var(--li-gray-border);
+            border-radius: 8px;
+            padding: 32px;
+            text-align: center;
+            background: #fafafa;
+            cursor: pointer;
+            transition: border 0.2s;
+        }
+        .cv-dropzone:hover { border-color: var(--li-text-gray); background: #f0f0f0; }
+
+        /* --- Modal & Utilities --- */
+        .modal-content { border-radius: 8px; }
+        .form-control:focus { border-color: var(--li-blue); box-shadow: 0 0 0 2px rgba(10, 102, 194, 0.2); }
+
+        /* Toast override */
+        .toast-container { z-index: 1060; }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .profile-container { padding: 0; }
+            .profile-card { border-radius: 0; border-left: none; border-right: none; }
+            .nav-icon span { display: none; }
+            .profile-avatar { width: 130px; height: 130px; }
+            .profile-avatar-wrapper { margin-bottom: -60px; }
+            .stats-container { flex-direction: column; }
+            .stat-box { border-right: none; border-bottom: 1px solid var(--li-gray-border); }
+        }
+    </style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand navbar-linkedin fixed-top">
+    <div class="container-fluid" style="max-width: 1128px;">
+        <a class="navbar-brand-linkedin" href="dashboard_candidate.html">
+            <i class="bi bi-linkedin"></i>
+        </a>
+
+        <div class="navbar-nav ms-auto flex-row align-items-center">
+            <a href="dashboard_candidate.html" class="nav-icon">
+                <i class="bi bi-house-door-fill"></i>
+                <span class="d-none d-md-block">Accueil</span>
+            </a>
+            <a href="#" class="nav-icon">
+                <i class="bi bi-people-fill"></i>
+                <span class="d-none d-md-block">Réseau</span>
+            </a>
+            <a href="dashboard_candidate.html" class="nav-icon">
+                <i class="bi bi-briefcase-fill"></i>
+                <span class="d-none d-md-block">Emplois</span>
+            </a>
+            <div class="dropdown">
+                <a href="#" class="nav-icon active dropdown-toggle" data-bs-toggle="dropdown">
+                    <i class="bi bi-person-circle"></i>
+                    <span class="d-none d-md-block">Vous</span>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end shadow border-0" style="margin-top: 10px;">
+                    <li><a class="dropdown-item" href="#" onclick="logout()">Déconnexion</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<div class="profile-container">
+
+    <div class="profile-card">
+        <div class="profile-cover" id="coverImg">
+            <button class="btn btn-sm btn-light position-absolute top-0 end-0 m-3 rounded-circle" onclick="openEditModal('images')">
+                <i class="bi bi-camera-fill text-secondary"></i>
+            </button>
+        </div>
+
+        <div class="profile-avatar-wrapper">
+            <div class="profile-avatar" id="profileAvatar"></div>
+        </div>
+
+        <div class="profile-info">
+            <div class="d-flex justify-content-between align-items-start">
+                <div>
+                    <h1 class="profile-name" id="profileName">...</h1>
+                    <span class="badge bg-warning text-dark ms-2 align-middle">Premium</span>
+                    <div class="profile-headline" id="profileHeadline">...</div>
+                    <div class="profile-location">
+                        <span id="profileCity">...</span> •
+                        <a href="#" class="text-primary text-decoration-none fw-bold" data-bs-toggle="modal" data-bs-target="#contactModal">Coordonnées</a>
+                    </div>
+                </div>
+                <div class="d-none d-md-block">
+                </div>
+            </div>
+
+            <div class="profile-actions">
+                <button class="btn-li-primary" onclick="openEditModal('infos')">Modifier le profil</button>
+                <button class="btn-li-outline">Plus</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="profile-card">
+        <div class="section-header">
+            <h2 class="section-title">Analyses</h2>
+            <i class="bi bi-eye text-muted"></i>
+        </div>
+        <div class="section-body">
+            <p class="text-muted small mb-3"><i class="bi bi-lock-fill"></i> Privé pour vous</p>
+            <div class="stats-container">
+                <div class="stat-box">
+                    <span class="stat-num d-flex align-items-center gap-2">
+                        <i class="bi bi-people-fill fs-5"></i>
+                        <span id="profileViews">0</span>
+                    </span>
+                    <span class="stat-text">Vues du profil</span>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-num d-flex align-items-center gap-2">
+                        <i class="bi bi-bar-chart-fill fs-5"></i>
+                        <span id="applicationsCount">0</span>
+                    </span>
+                    <span class="stat-text">Candidatures</span>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-num d-flex align-items-center gap-2">
+                        <i class="bi bi-search fs-5"></i>
+                        <span id="skillsCount">0</span>
+                    </span>
+                    <span class="stat-text">Compétences validées</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="profile-card">
+        <div class="section-header">
+            <h2 class="section-title">CV & Documents</h2>
+            <div class="d-flex gap-2">
+                <button class="btn-li-gray rounded-circle p-1 px-2" onclick="document.getElementById('cvFile').click()">
+                    <i class="bi bi-plus-lg"></i>
+                </button>
+            </div>
+        </div>
+        <div class="section-body">
+            <div id="existingCvSection" class="d-none border rounded p-3 mb-3 d-flex justify-content-between align-items-center bg-light">
+                <div class="d-flex align-items-center gap-3">
+                    <i class="bi bi-file-earmark-pdf-fill text-danger fs-3"></i>
+                    <div>
+                        <div class="fw-bold" id="cvNameDisplay">cv.pdf</div>
+                        <div class="small text-muted">Optimisé par JobMatcher AI</div>
+                    </div>
+                </div>
+                <a id="btnDownloadCv" href="#" target="_blank" class="btn-li-outline btn-sm">
+                    <i class="bi bi-download"></i>
+                </a>
+            </div>
+
+            <div class="cv-dropzone" id="cvDropZone">
+                <i class="bi bi-cloud-upload fs-1 text-muted"></i>
+                <h5 class="mt-2">Glissez votre CV ici</h5>
+                <p class="text-muted small mb-3">ou cliquez pour sélectionner (PDF)</p>
+                <input type="file" id="cvFile" class="d-none" accept=".pdf">
+                <button onclick="uploadCV()" class="btn-li-primary btn-sm">Analyser votre CV</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="profile-card">
+        <div class="section-header">
+            <h2 class="section-title">Compétences</h2>
+            <div class="d-flex gap-2">
+                <button class="btn-li-outline btn-sm" onclick="triggerAddSkill()">Ajouter une compétence</button>
+                <button class="btn-li-gray rounded-circle p-1 px-2" onclick="openEditModal('skills')"><i class="bi bi-pencil"></i></button>
+            </div>
+        </div>
+        <div class="section-body">
+            <div class="input-group mb-3 d-none" id="addSkillContainer">
+                <input type="text" id="newSkillInput" class="form-control" placeholder="Ex: Java, Marketing...">
+                <button class="btn btn-primary" onclick="addSkill()">Valider</button>
+            </div>
+
+            <div id="skillsList" class="skills-grid">
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div class="modal fade" id="contactModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header border-0 pb-0">
+                <h5 class="modal-title">Coordonnées</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <div class="d-flex align-items-center gap-3 mb-2">
+                        <i class="bi bi-envelope fs-5 text-muted"></i>
+                        <div>
+                            <div class="fw-bold">Email</div>
+                            <a href="#" class="text-decoration-none" id="modalEmail">...</a>
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-center gap-3">
+                        <i class="bi bi-telephone fs-5 text-muted"></i>
+                        <div>
+                            <div class="fw-bold">Téléphone</div>
+                            <span id="modalPhone">...</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="editModal" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Modifier le profil</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <ul class="nav nav-tabs mb-4" id="editTabs">
+                    <li class="nav-item"><a class="nav-link active" data-bs-toggle="tab" href="#tab-basic">Intro</a></li>
+                    <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#tab-media">Photos</a></li>
+                </ul>
+
+                <div class="tab-content">
+                    <div class="tab-pane fade show active" id="tab-basic">
+                        <div class="mb-3">
+                            <label class="form-label small fw-bold text-muted">Nom complet *</label>
+                            <input type="text" id="editName" class="form-control">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label small fw-bold text-muted">Titre du profil *</label>
+                            <input type="text" id="editTitle" class="form-control" placeholder="Ex: Étudiant ingénieur...">
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label small fw-bold text-muted">Ville</label>
+                                <input type="text" id="editCity" class="form-control">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label small fw-bold text-muted">Téléphone</label>
+                                <input type="text" id="editPhone" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="tab-pane fade" id="tab-media">
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">Photo de profil</label>
+                            <div class="d-flex gap-2">
+                                <input type="file" id="editPicFile" class="form-control" accept="image/*">
+                                <button class="btn btn-outline-primary" onclick="uploadImage('photo')">Uploader</button>
+                            </div>
+                            <input type="text" id="editPicUrl" class="form-control mt-2" placeholder="Ou coller une URL...">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Photo de couverture</label>
+                            <div class="d-flex gap-2">
+                                <input type="file" id="editCoverFile" class="form-control" accept="image/*">
+                                <button class="btn btn-outline-primary" onclick="uploadImage('cover')">Uploader</button>
+                            </div>
+                            <input type="text" id="editCoverUrl" class="form-control mt-2" placeholder="Ou coller une URL...">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" onclick="saveProfile()" class="btn-li-primary">Enregistrer</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="toast-container position-fixed bottom-0 start-0 p-3">
+    <div id="liveToast" class="toast align-items-center text-white bg-dark border-0" role="alert">
+        <div class="d-flex">
+            <div class="toast-body" id="toastMsg">Notification</div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    // --- State & Init ---
+    let user = JSON.parse(localStorage.getItem("user")) || {};
+    if (!user.id && !user.name) {
+        // Fallback for demo/testing if no user in localstorage
+        console.warn("No user found in localStorage, redirecting...");
+        window.location.href = "index.html";
+    }
+
+    let editModalInstance;
+
+    document.addEventListener('DOMContentLoaded', () => {
+        editModalInstance = new bootstrap.Modal(document.getElementById('editModal'));
+        refreshUI();
+        initDragAndDrop();
+    });
+
+    // --- UI Rendering ---
+    function refreshUI() {
+        // Avatar
+        const avatarEl = document.getElementById('profileAvatar');
+        if (user.profilePicture) {
+            avatarEl.style.backgroundImage = `url('${user.profilePicture}')`;
+            avatarEl.innerText = "";
+        } else {
+            avatarEl.style.backgroundImage = "none";
+            avatarEl.innerText = (user.name || "U").charAt(0).toUpperCase();
+        }
+
+        // Cover
+        const coverEl = document.getElementById('coverImg');
+        coverEl.style.backgroundImage = user.coverPicture
+            ? `url('${user.coverPicture}')`
+            : "linear-gradient(135deg, #004182, #0a66c2)";
+
+        // Text Data
+        setText('profileName', user.name || 'Utilisateur');
+        setText('profileHeadline', user.title || 'Pas de titre renseigné');
+        setText('profileCity', user.city || 'Localisation inconnue');
+
+        // Modal Data
+        setText('modalEmail', user.email || 'Non renseigné');
+        setText('modalPhone', user.phone || 'Non renseigné');
+        document.getElementById('modalEmail').href = `mailto:${user.email}`;
+
+        // CV Section
+        const cvSection = document.getElementById("existingCvSection");
+        const dropZone = document.getElementById("cvDropZone");
+
+        if (user.cvFileName) {
+            cvSection.classList.remove("d-none");
+            setText('cvNameDisplay', user.cvFileName);
+            document.getElementById("btnDownloadCv").href = `/api/candidates/${user.id}/cv`;
+        } else {
+            cvSection.classList.add("d-none");
+        }
+
+        // Stats & Skills
+        updateStats();
+        renderSkills();
+    }
+
+    function setText(id, val) {
+        const el = document.getElementById(id);
+        if(el) el.innerText = val;
+    }
+
+    function renderSkills() {
+        const list = user.skills || [];
+        const container = document.getElementById("skillsList");
+
+        if(list.length === 0) {
+            container.innerHTML = '<span class="text-muted small fst-italic">Aucune compétence ajoutée.</span>';
+            return;
+        }
+
+        container.innerHTML = list.map(s => `
+            <div class="skill-pill">
+                ${s.name}
+                <i onclick="removeSkill('${s.name}')" class="bi bi-x-lg skill-remove" title="Supprimer"></i>
+            </div>
+        `).join("");
+    }
+
+    function updateStats() {
+        setText('skillsCount', (user.skills || []).length);
+        setText('applicationsCount', (user.appliedJobs || []).length);
+        setText('profileViews', user.profileViews || Math.floor(Math.random() * 50));
+    }
+
+    // --- Actions ---
+    function openEditModal(tabName) {
+        // Pre-fill form
+        document.getElementById('editName').value = user.name || "";
+        document.getElementById('editTitle').value = user.title || "";
+        document.getElementById('editCity').value = user.city || "";
+        document.getElementById('editPhone').value = user.phone || "";
+        document.getElementById('editPicUrl').value = "";
+        document.getElementById('editCoverUrl').value = "";
+
+        // Switch tab if needed (simple logic)
+        if(tabName === 'images') {
+            const tabTrigger = new bootstrap.Tab(document.querySelector('#editTabs a[href="#tab-media"]'));
+            tabTrigger.show();
+        } else {
+            const tabTrigger = new bootstrap.Tab(document.querySelector('#editTabs a[href="#tab-basic"]'));
+            tabTrigger.show();
+        }
+
+        editModalInstance.show();
+    }
+
+    async function saveProfile() {
+        const payload = {
+            name: document.getElementById('editName').value,
+            title: document.getElementById('editTitle').value,
+            city: document.getElementById('editCity').value,
+            phone: document.getElementById('editPhone').value
+        };
+
+        // Handle URL inputs for images (Files handled by separate upload buttons)
+        const picUrl = document.getElementById('editPicUrl').value;
+        const coverUrl = document.getElementById('editCoverUrl').value;
+        if(picUrl) payload.profilePicture = picUrl;
+        if(coverUrl) payload.coverPicture = coverUrl;
+
+        await apiCall(`/api/candidates/${user.id}`, "PUT", payload, "Profil mis à jour !");
+        editModalInstance.hide();
+    }
+
+    // --- Image & CV Upload ---
+    async function uploadImage(type) {
+        const fileInput = document.getElementById(type === 'photo' ? 'editPicFile' : 'editCoverFile');
+        if(!validateFile(fileInput)) return;
+
+        const formData = new FormData();
+        formData.append("file", fileInput.files[0]);
+        const endpoint = type === 'photo' ? 'upload-photo' : 'upload-cover';
+
+        await apiUpload(`/api/candidates/${user.id}/${endpoint}`, formData, "Image mise à jour !");
+    }
+
+    async function uploadCV() {
+        const fileInput = document.getElementById("cvFile");
+        if(fileInput.files.length === 0 || !fileInput.files[0].name.toLowerCase().endsWith('.pdf')) {
+            showToast("Veuillez sélectionner un fichier PDF valide.", "warning");
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append("file", fileInput.files[0]);
+
+        showToast("Analyse AI en cours...", "primary"); // Indicate loading
+        await apiUpload(`/api/candidates/${user.id}/upload-cv`, formData, "CV analysé avec succès !");
+    }
+
+    // --- Skills Management ---
+    function triggerAddSkill() {
+        const container = document.getElementById("addSkillContainer");
+        container.classList.toggle("d-none");
+        if(!container.classList.contains("d-none")) {
+            document.getElementById("newSkillInput").focus();
+        }
+    }
+
+    async function addSkill() {
+        const input = document.getElementById("newSkillInput");
+        const val = input.value.trim();
+        if(!val) return;
+
+        await apiCall(`/api/candidates/${user.id}/skills`, "POST", {name: val}, "Compétence ajoutée !");
+        input.value = "";
+        document.getElementById("addSkillContainer").classList.add("d-none");
+    }
+
+    async function removeSkill(name) {
+        if(!confirm("Supprimer cette compétence ?")) return;
+        // Sending body in DELETE request is non-standard but matches your previous code
+        await apiCall(`/api/candidates/${user.id}/skills`, "DELETE", {name: name}, "Compétence supprimée.");
+    }
+
+    // --- Helpers ---
+    async function apiCall(url, method, body, successMsg) {
+        try {
+            const res = await fetch(url, {
+                method: method,
+                headers: {"Content-Type":"application/json"},
+                body: JSON.stringify(body)
+            });
+            if(res.ok) {
+                user = await res.json();
+                localStorage.setItem("user", JSON.stringify(user));
+                refreshUI();
+                showToast(successMsg, "success");
+            } else {
+                throw new Error("API Error");
+            }
+        } catch(e) {
+            console.error(e);
+            showToast("Une erreur est survenue.", "danger");
+        }
+    }
+
+    async function apiUpload(url, formData, successMsg) {
+        try {
+            const res = await fetch(url, { method: "POST", body: formData });
+            if(res.ok) {
+                user = await res.json();
+                localStorage.setItem("user", JSON.stringify(user));
+                refreshUI();
+                showToast(successMsg, "success");
+            } else {
+                throw new Error("Upload Error");
+            }
+        } catch(e) {
+            console.error(e);
+            showToast("Erreur lors de l'upload.", "danger");
+        }
+    }
+
+    function validateFile(input) {
+        if(input.files.length === 0) {
+            showToast("Aucun fichier sélectionné.", "warning");
+            return false;
+        }
+        return true;
+    }
+
+    function initDragAndDrop() {
+        const dropZone = document.getElementById('cvDropZone');
+        const fileInput = document.getElementById('cvFile');
+
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            dropZone.addEventListener(eventName, preventDefaults, false);
+        });
+
+        function preventDefaults(e) { e.preventDefault(); e.stopPropagation(); }
+
+        dropZone.addEventListener('dragover', () => dropZone.style.background = '#e9e9e9');
+        dropZone.addEventListener('dragleave', () => dropZone.style.background = '#fafafa');
+        dropZone.addEventListener('drop', (e) => {
+            dropZone.style.background = '#fafafa';
+            const dt = e.dataTransfer;
+            const files = dt.files;
+            fileInput.files = files;
+            uploadCV();
+        });
+    }
+
+    function showToast(msg, type="primary") {
+        const el = document.getElementById('liveToast');
+        const body = document.getElementById('toastMsg');
+
+        // Simple color mapping
+        el.className = `toast align-items-center text-white border-0 bg-${type === 'error' ? 'danger' : type === 'warning' ? 'warning' : 'dark'}`;
+        if(type === 'success') el.classList.replace('bg-dark', 'bg-success');
+
+        body.innerText = msg;
+        const toast = new bootstrap.Toast(el);
+        toast.show();
+    }
+
+    function logout() {
+        localStorage.clear();
+        window.location.href = "index.html";
+    }
+</script>
+</body>
+</html>

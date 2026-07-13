@@ -1,0 +1,1403 @@
+\documentclass[12pt,a4paper]{report}
+
+% Packages indispensables
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+\usepackage{graphicx}
+\usepackage{geometry}
+\usepackage{hyperref}
+\usepackage{setspace}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{xcolor}
+
+% Coloration des titres en bleu
+\titleformat{\chapter}[display]
+  {\normalfont\huge\bfseries\color{blue}}{\chaptertitlename\ \thechapter}{20pt}{\Huge}
+\titleformat*{\section}{\Large\bfseries\color{blue}}
+\titleformat*{\subsection}{\large\bfseries\color{blue}}
+\titleformat*{\subsubsection}{\normalsize\bfseries\color{blue}}
+\titleformat*{\paragraph}{\normalsize\bfseries\color{blue}}
+\titleformat*{\subparagraph}{\normalsize\bfseries\color{blue}}
+
+\usepackage{tocloft}
+\usepackage{acronym}
+
+% Configuration de la géométrie de la page
+\geometry{
+    top=2.5cm,
+    bottom=2.5cm,
+    left=3cm,
+    right=2.5cm
+}
+
+% Configuration des hyperliens
+\hypersetup{
+    colorlinks=true,
+    linkcolor=black,
+    filecolor=magenta,      
+    urlcolor=blue,
+    pdftitle={Rapport de Projet - JobMatcher},
+}
+
+% Espacement des lignes
+\setstretch{1.5}
+
+\begin{document}
+
+% ---------------------------------------------------------
+% PAGE DE GARDE
+% ---------------------------------------------------------
+\begin{titlepage}
+    \begin{center}
+        % Logo de l'école (à remplacer par le vrai logo)
+        % \includegraphics[width=5cm]{logo_emsi.png}\\[1cm]
+        \vspace*{1cm}
+        
+        {\LARGE \textbf{École Marocaine des Sciences de l'Ingénieur}}\\[0.5cm]
+        {\Large \textbf{Filière : Ingénierie Informatique et Réseaux}}\\[2cm]
+        
+        {\large \textbf{Rapport de Projet}}\\[0.5cm]
+        
+        % Titre du projet
+        \rule{\linewidth}{0.5mm}\\[0.4cm]
+        {\huge \textbf{JobMatcher}}\\[0.2cm]
+        {\Large \textit{Plateforme Intelligente de Mise en Relation entre Candidats et Recruteurs basée sur les Graphes}}\\[0.4cm]
+        \rule{\linewidth}{0.5mm}\\[2cm]
+        
+        \begin{minipage}{0.4\textwidth}
+            \begin{flushleft} \large
+                \emph{Réalisé par :}\\
+                \textbf{elhannak bade}\\
+                \textbf{allalou ayman}
+            \end{flushleft}
+        \end{minipage}
+        \hfill
+        \begin{minipage}{0.4\textwidth}
+            \begin{flushright} \large
+                \emph{Encadré par :} \\
+                \textbf{sayouti adil}
+            \end{flushright}
+        \end{minipage}\\[3cm]
+        
+        {\large \textbf{Année universitaire : 2023 - 2024}}
+        
+    \end{center}
+\end{titlepage}
+
+% ---------------------------------------------------------
+% DÉDICACES
+% ---------------------------------------------------------
+\chapter*{Dédicaces}
+\addcontentsline{toc}{chapter}{Dédicaces}
+\vspace{1cm}
+\begin{center}
+    \textit{À nos parents, pour leur soutien inconditionnel, leurs sacrifices et leurs prières tout au long de nos études.}\\
+    \vspace{0.5cm}
+    \textit{À nos familles et amis, pour leur présence et leurs encouragements constants.}\\
+    \vspace{0.5cm}
+    \textit{À tous ceux qui ont cru en nous et nous ont aidés de près ou de loin à la réalisation de ce travail.}
+\end{center}
+\clearpage
+
+% ---------------------------------------------------------
+% REMERCIEMENTS
+% ---------------------------------------------------------
+\chapter*{Remerciements}
+\addcontentsline{toc}{chapter}{Remerciements}
+\vspace{1cm}
+Nous tenons tout d'abord à remercier chaleureusement notre encadrant, \textbf{M. sayouti adil}, pour sa patience, sa disponibilité et surtout pour ses conseils judicieux qui ont contribué à alimenter nos réflexions.
+
+Nous exprimons également notre profonde gratitude aux membres du jury qui nous font l'honneur d'évaluer ce travail, pour le temps qu'ils ont bien voulu y consacrer.
+
+Enfin, nos remerciements s'adressent à l'ensemble du corps professoral et administratif de l'\textbf{École Marocaine des Sciences de l'Ingénieur (EMSI)} pour la qualité de la formation que nous avons reçue tout au long de notre cursus, ainsi qu'à nos familles pour leur soutien moral et matériel indispensable.
+\clearpage
+
+% ---------------------------------------------------------
+% RÉSUMÉ (FRANÇAIS)
+% ---------------------------------------------------------
+\chapter*{Résumé}
+\addcontentsline{toc}{chapter}{Résumé}
+Le recrutement est aujourd'hui un défi majeur pour les entreprises face à un volume croissant de candidatures et à la complexité d'identifier les compétences adéquates. Ce projet, intitulé \textbf{JobMatcher}, propose la conception et le développement d'une plateforme intelligente visant à optimiser la mise en relation entre les recruteurs et les candidats. En s'appuyant sur des technologies modernes telles que Spring Boot pour le backend et Neo4j, une base de données orientée graphe, l'application modélise les relations complexes entre les offres d'emploi, les profils des candidats et leurs compétences. La solution intègre des fonctionnalités d'extraction automatique d'informations à partir des CV (via PDFBox) et un algorithme de matching performant qui évalue la compatibilité sémantique et technique. Ainsi, JobMatcher réduit significativement le temps de présélection tout en garantissant des recommandations pertinentes et personnalisées. Ce rapport détaille le cycle de vie du projet, de l'analyse des besoins à l'implémentation technique, en passant par la conception de l'architecture.
+
+\textbf{Mots-clés :} Recrutement, Matching, Base de données graphe, Neo4j, Spring Boot, Extraction de CV.
+\clearpage
+
+% ---------------------------------------------------------
+% ABSTRACT (ANGLAIS)
+% ---------------------------------------------------------
+\chapter*{Abstract}
+\addcontentsline{toc}{chapter}{Abstract}
+Recruitment is currently a major challenge for companies facing a growing volume of applications and the complexity of identifying the right skills. This project, entitled \textbf{JobMatcher}, proposes the design and development of an intelligent platform aimed at optimizing the connection between recruiters and candidates. By leveraging modern technologies such as Spring Boot for the backend and Neo4j, a graph-oriented database, the application models the complex relationships between job offers, candidate profiles, and their skills. The solution integrates automated information extraction from resumes (via PDFBox) and a powerful matching algorithm that evaluates semantic and technical compatibility. Consequently, JobMatcher significantly reduces pre-screening time while ensuring relevant and personalized recommendations. This report details the project's life cycle, from requirements analysis and architectural design to technical implementation.
+
+\textbf{Keywords :} Recruitment, Matching, Graph Database, Neo4j, Spring Boot, Resume Extraction.
+\clearpage
+
+% ---------------------------------------------------------
+% SOMMAIRE / TABLE DES MATIÈRES
+% ---------------------------------------------------------
+\tableofcontents
+\clearpage
+
+% ---------------------------------------------------------
+% LISTE DES FIGURES
+% ---------------------------------------------------------
+\listoffigures
+\addcontentsline{toc}{chapter}{Liste des figures}
+\clearpage
+
+% ---------------------------------------------------------
+% LISTE DES TABLEAUX
+% ---------------------------------------------------------
+\listoftables
+\addcontentsline{toc}{chapter}{Liste des tableaux}
+\clearpage
+
+% ---------------------------------------------------------
+% LISTE DES ABRÉVIATIONS ET ACRONYMES
+% ---------------------------------------------------------
+\chapter*{Liste des abréviations}
+\addcontentsline{toc}{chapter}{Liste des abréviations}
+\begin{acronym}[PESTEL] % PESTEL is the longest acronym to set the alignment
+    \acro{API}{Application Programming Interface}
+    \acro{BMC}{Business Model Canvas}
+    \acro{CV}{Curriculum Vitae}
+    \acro{EMSI}{École Marocaine des Sciences de l'Ingénieur}
+    \acro{GDS}{Graph Data Science (Neo4j)}
+    \acro{IA}{Intelligence Artificielle}
+    \acro{JWT}{JSON Web Token}
+    \acro{LLM}{Large Language Model (Modèle de langage de grande taille)}
+    \acro{MVC}{Model-View-Controller}
+    \acro{NLP}{Natural Language Processing}
+    \acro{PDF}{Portable Document Format}
+    \acro{PESTEL}{Politique, Économique, Social, Technologique, Environnemental, Légal}
+    \acro{RACI}{Responsible, Accountable, Consulted, Informed}
+    \acro{REST}{Representational State Transfer}
+    \acro{SaaS}{Software as a Service}
+    \acro{SWOT}{Strengths, Weaknesses, Opportunities, Threats}
+    \acro{UI}{User Interface}
+    \acro{UML}{Unified Modeling Language}
+    \acro{UX}{User Experience}
+    \acro{WBS}{Work Breakdown Structure}
+\end{acronym}
+\clearpage
+
+% =========================================================
+% INTRODUCTION GÉNÉRALE
+% =========================================================
+\chapter*{Introduction Générale}
+\addcontentsline{toc}{chapter}{Introduction Générale}
+
+\section*{Contexte général du projet}
+Dans un monde professionnel en constante mutation, l'ère du numérique a radicalement transformé les processus de recrutement. Les entreprises reçoivent quotidiennement un volume massif de candidatures, rendant la tâche des recruteurs de plus en plus chronophage et complexe. D'un autre côté, les candidats peinent souvent à trouver des offres qui correspondent parfaitement à leurs compétences et aspirations. Le défi majeur réside aujourd'hui dans l'exploitation efficace des données pour identifier rapidement la meilleure adéquation entre le profil d'un candidat et les exigences spécifiques d'un poste. C'est dans ce contexte de digitalisation accrue et de besoin d'automatisation intelligente que s'inscrit l'évolution des plateformes d'e-recrutement.
+
+\section*{Motivation et genèse du projet}
+La genèse du projet \textbf{JobMatcher} découle du constat que les outils traditionnels de recrutement se limitent souvent à de simples recherches par mots-clés, ignorant les relations complexes et sémantiques entre les compétences. L'opportunité d'exploiter la théorie des graphes, au moyen d'une technologie comme Neo4j, pour modéliser ces interactions nous a particulièrement motivés. En créant un réseau interconnecté de candidats, de postes et de compétences, nous pouvons proposer une approche novatrice et beaucoup plus précise pour la mise en relation professionnelle.
+
+\section*{Problématique centrale}
+Au regard de ces éléments, la problématique centrale de notre projet s'articule autour de la question suivante : \textbf{Comment concevoir et implémenter une plateforme de recrutement intelligente capable d'extraire automatiquement les informations pertinentes des CV et de modéliser les relations sous forme de graphe pour optimiser et automatiser la mise en relation (matching) entre candidats et recruteurs ?} 
+Cette question sera explorée et développée plus en détail dans le premier chapitre.
+
+\section*{Objectifs du rapport}
+Ce rapport a pour vocation de retracer le cheminement de notre travail. Les objectifs principaux de ce document sont de :
+\begin{itemize}
+    \item Présenter une analyse détaillée des besoins fonctionnels et non fonctionnels de la plateforme.
+    \item Décrire l'architecture logicielle adoptée, en mettant l'accent sur l'intégration de Spring Boot et de la base de données orientée graphe Neo4j.
+    \item Expliquer les mécanismes mis en place pour l'extraction de données à partir des CV (via PDFBox) et les algorithmes de matching.
+    \item Démontrer, à travers la réalisation finale, la valeur ajoutée de notre solution dans le processus de recrutement.
+\end{itemize}
+
+\section*{Organisation du rapport}
+Afin de répondre à la problématique posée et d'exposer clairement notre démarche, ce rapport est organisé de la manière suivante :
+\begin{itemize}
+    \item \textbf{Le Chapitre 1 (Analyse et Spécification des Besoins)} détaillera le contexte, la problématique approfondie et les spécifications fonctionnelles du projet.
+    \item \textbf{Le Chapitre 2 (Conception et Architecture)} présentera l'architecture globale du système, la modélisation du graphe sous Neo4j et les diagrammes de conception pertinents.
+    \item \textbf{Le Chapitre 3 (Réalisation et Implémentation)} exposera l'environnement de développement, les choix technologiques et illustrera le fonctionnement de l'application à travers les interfaces réalisées.
+\end{itemize}
+Une conclusion générale viendra clôturer ce rapport, en dressant le bilan du travail accompli et en proposant des perspectives d'évolution pour le projet JobMatcher.
+
+% =========================================================
+% CHAPITRE 1 : Exploration du Problème & Opportunité
+% =========================================================
+\chapter{Exploration du Problème \& Opportunité}
+
+\section{Contexte et constat de départ}
+
+\subsection{Présentation du domaine et secteur ciblé}
+Le domaine concerné est celui des Ressources Humaines (RH), plus précisément le secteur du recrutement et de l'acquisition de talents. Ce secteur est vital pour la compétitivité des entreprises, car le capital humain constitue le principal moteur d'innovation et de performance. Le marché ciblé englobe les cabinets de recrutement, les départements RH des moyennes et grandes entreprises, ainsi que les plateformes de recherche d'emploi grand public.
+
+\subsection{Tendances numériques et transformation digitale}
+La transformation digitale a bouleversé le recrutement. L'avènement des plateformes en ligne, l'utilisation croissante de l'intelligence artificielle pour le tri automatisé des candidatures (ATS - Applicant Tracking Systems) et l'exploitation des données (Big Data) sont désormais la norme. De plus, les candidats attendent aujourd'hui des processus fluides, rapides et mobiles. L'analyse sémantique et la modélisation sous forme de graphes émergent comme des technologies clés pour comprendre les compétences au-delà des simples mots-clés.
+
+\subsection{Difficultés observées et besoins non satisfaits}
+Malgré la digitalisation, des difficultés persistent :
+\begin{itemize}
+    \item \textbf{Surcharge d'informations :} Les recruteurs sont noyés sous un volume massif de CV souvent non pertinents.
+    \item \textbf{Matching inefficace :} Les systèmes basés sur la recherche par mots-clés ne saisissent pas le contexte ni la proximité sémantique entre différentes compétences (ex. "React" et "Vue.js" sont proches, mais distincts).
+    \item \textbf{Perte de temps :} Le tri manuel reste prédominant pour les profils complexes.
+    \item \textbf{Frustration des candidats :} Manque de retours personnalisés et candidatures perdues dans des "trous noirs" algorithmiques.
+\end{itemize}
+
+\section{Cartographie des frustrations utilisateurs}
+
+\subsection{Méthode de collecte des frustrations}
+Pour cartographier les frustrations, nous avons opté pour une approche mixte :
+\begin{itemize}
+    \item \textbf{Entretiens qualitatifs} avec 5 professionnels des RH (chasseurs de têtes et chargés de recrutement).
+    \item \textbf{Sondage en ligne} diffusé auprès d'un panel de 50 candidats en recherche active.
+    \item \textbf{Analyse documentaire} des retours utilisateurs sur les plateformes de recrutement existantes (LinkedIn, Indeed).
+\end{itemize}
+
+\subsection{Synthèse des principales frustrations identifiées}
+Les retours ont permis de mettre en évidence les "pain points" (points de douleur) suivants :
+\begin{itemize}
+    \item \textbf{Pour les recruteurs :} "Je passe 70\% de mon temps à trier des CV qui ne correspondent pas au poste. Les outils actuels ne comprennent pas les nuances des compétences techniques."
+    \item \textbf{Pour les candidats :} "Je postule à des dizaines d'offres sans savoir si mon profil correspond vraiment. Mon CV n'est jugé que sur des mots-clés exacts, ce qui occulte ma réelle capacité d'adaptation."
+\end{itemize}
+
+\section{Formulation structurée du problème}
+
+\subsection{Énoncé du problème}
+Le problème peut être énoncé ainsi : \\
+\textbf{Les recruteurs et les candidats} perdent un temps considérable et ratent des opportunités \textbf{lors de la phase de présélection et de recherche} parce que \textbf{les outils actuels de matching reposent sur des recherches lexicales basiques qui ne comprennent pas les relations sémantiques entre les compétences et les expériences.}
+
+\subsection{Périmètre et délimitation du problème}
+Ce projet se concentre exclusivement sur :
+\begin{itemize}
+    \item L'extraction intelligente d'informations à partir des CV format PDF.
+    \item La modélisation des profils, des offres et des compétences sous forme de graphe relationnel.
+    \item La recommandation (matching) entre un candidat et une offre.
+\end{itemize}
+Il n'inclut pas, à ce stade, la gestion administrative des contrats, la planification des entretiens en visioconférence ou le passage de tests techniques en ligne.
+
+\section{Démarche Design Thinking — Compréhension utilisateur}
+
+\subsection{Profil utilisateur cible (Fiche utilisateur)}
+Nous distinguons deux personas principaux :
+\begin{enumerate}
+    \item \textbf{Marc, le Recruteur (35 ans) :} 
+    \begin{itemize}
+        \item \textit{Objectif :} Trouver le bon talent technique rapidement.
+        \item \textit{Frustration :} Les ATS classiques remontent trop de "faux positifs".
+    \end{itemize}
+    \item \textbf{Sophie, la Candidate (26 ans, Développeuse Fullstack) :}
+    \begin{itemize}
+        \item \textit{Objectif :} Être visible pour des postes qui correspondent à sa stack technologique et ses ambitions.
+        \item \textit{Frustration :} Devoir reformuler son CV pour chaque algorithme d'entreprise.
+    \end{itemize}
+\end{enumerate}
+
+\subsection{Méthode QQOQCCP appliquée}
+\begin{itemize}
+    \item \textbf{Qui ?} Recruteurs, professionnels RH et candidats.
+    \item \textbf{Quoi ?} L'inadéquation et la lenteur dans le processus de mise en relation offre/candidat.
+    \item \textbf{Où ?} Sur les plateformes d'e-recrutement et dans les systèmes internes des entreprises.
+    \item \textbf{Quand ?} Dès la publication de l'offre et lors du tri des candidatures entrantes.
+    \item \textbf{Comment ?} Par le biais de recherches par mots-clés limitées et rigides.
+    \item \textbf{Combien ?} Des centaines d'heures perdues par an par recruteur.
+    \item \textbf{Pourquoi ?} Car la sémantique et la proximité des compétences ne sont pas évaluées nativement par les bases de données relationnelles classiques.
+\end{itemize}
+
+\section{Analyse causale (méthode des 5 Pourquoi)}
+
+\subsection{Application de la méthode}
+\textbf{Problème initial :} Le recruteur passe trop de temps à trier les CV.
+\begin{enumerate}
+    \item \textit{Pourquoi ?} Parce qu'il reçoit beaucoup de CV qui ne correspondent pas aux besoins réels.
+    \item \textit{Pourquoi ?} Parce que l'outil de présélection remonte tous les profils contenant les mots-clés de l'offre, sans discernement.
+    \item \textit{Pourquoi ?} Parce que l'algorithme ne comprend pas la différence entre un mot-clé cité en "passion" et un mot-clé correspondant à "5 ans d'expérience".
+    \item \textit{Pourquoi ?} Parce que l'extraction des données du CV ne les structure pas en relation les unes avec les autres.
+    \item \textit{Pourquoi ?} Parce que le système repose sur une base de données plate au lieu d'une architecture capable de modéliser des nœuds et des relations (comme un graphe).
+\end{enumerate}
+
+\subsection{Reformulation précise et ciblée du problème}
+Comment structurer les données d'un CV et d'une offre sous forme de réseau interconnecté (graphe) afin de calculer un score de compatibilité sémantique et relationnel précis entre un candidat et un poste ?
+
+\section{Idéation et sélection de la solution}
+
+\subsection{Brainstorming / Brainwriting 6-3-5}
+Lors de nos séances d'idéation, plusieurs pistes ont émergé :
+\begin{itemize}
+    \item \textit{Idée 1 :} Créer un chatbot IA qui fait passer un pré-entretien vocal.
+    \item \textit{Idée 2 :} Utiliser une base de données graphe (Neo4j) pour relier les compétences et faire du matching par parcours de graphe.
+    \item \textit{Idée 3 :} Imposer aux candidats de remplir des formulaires structurés très longs au lieu du CV.
+    \item \textit{Idée 4 :} Externaliser le tri à une API d'OpenAI pour lire chaque CV à la volée et générer un score.
+\end{itemize}
+
+\subsection{Matrice d'impact et de faisabilité}
+\begin{itemize}
+    \item \textbf{Idée 1 (Chatbot IA) :} Impact Modéré / Faisabilité Faible (trop complexe pour le délai imparti, hors périmètre).
+    \item \textbf{Idée 2 (Graphe Neo4j) :} Impact Fort / Faisabilité Haute (technologies Spring Boot et Neo4j adaptées et maîtrisées).
+    \item \textbf{Idée 3 (Formulaires longs) :} Impact Faible (frein majeur à la candidature) / Faisabilité Haute.
+    \item \textbf{Idée 4 (API externe complète) :} Impact Fort / Faisabilité Modérée (coûts d'API élevés à l'échelle, problématiques de confidentialité des données).
+\end{itemize}
+
+\subsection{Solution retenue et justification}
+La \textbf{solution retenue est l'Idée 2} : Le développement de la plateforme \textbf{JobMatcher} intégrant une extraction automatique de CV (via PDFBox) et un stockage structuré dans une base de données orientée graphe (Neo4j). 
+\textit{Justification :} Cette solution offre le meilleur équilibre entre l'innovation technologique (utilisation de graphes), la faisabilité technique dans le cadre du projet académique, et la résolution concrète du problème profond (la compréhension des relations entre les compétences).
+
+\section{Hypothèses de départ}
+
+\subsection{Hypothèse problème}
+Les acteurs du recrutement souffrent d'un manque d'outils capables de comprendre la proximité sémantique et les relations entre les compétences, ce qui génère une surcharge de travail manuelle importante lors du tri.
+
+\subsection{Hypothèse solution}
+L'utilisation d'une base de données orientée graphe (Neo4j) couplée à un algorithme de matching personnalisé permettra d'augmenter significativement la pertinence des profils recommandés par rapport à une recherche textuelle classique.
+
+\subsection{Hypothèse valeur / impact}
+En adoptant JobMatcher, un recruteur réduira son temps de présélection de manière drastique, augmentant ainsi sa productivité et améliorant la qualité et la rapidité des embauches.
+
+\section{Validation terrain}
+
+\subsection{Méthode de validation}
+Pour valider ces hypothèses avant le développement complet, nous nous sommes basés sur des échanges avec :
+\begin{itemize}
+    \item \textbf{Professionnels RH :} Présentation du concept du "matching par graphe" à des recruteurs.
+    \item \textbf{Candidats :} Discussions informelles sur leurs attentes vis-à-vis des plateformes d'emploi.
+\end{itemize}
+
+\subsection{Résultats et taux d'intérêt (GO / PIVOT / ABANDON)}
+\begin{itemize}
+    \item \textbf{Côté Recruteurs :} Fort intérêt pour la visualisation des compétences et le calcul d'un score de matching transparent et compréhensible.
+    \item \textbf{Côté Candidats :} Approbation de la promesse de voir leurs candidatures évaluées sur la base d'un réseau de compétences globales plutôt que sur des mots-clés stricts.
+    \item \textbf{Décision finale :} \textbf{GO}. Le besoin est confirmé, la frustration existe bel et bien, et la solution technique envisagée (Neo4j) apparaît comme une réponse pertinente et innovante.
+\end{itemize}
+
+\section{Adéquation Problème–Solution (Problem–Solution Fit)}
+
+\subsection{Synthèse : pourquoi cette solution répond à ce problème}
+La solution JobMatcher s'attaque directement à la cause racine identifiée lors de l'analyse causale (le manque de structuration relationnelle des données). En extrayant les compétences d'un CV et en les connectant aux exigences d'une offre via les nœuds et relations de Neo4j, le système dépasse la simple comparaison de chaînes de caractères pour réaliser une véritable analyse de réseaux d'expertise. Le recruteur obtient ainsi une liste de recommandations classées par pertinence contextuelle.
+
+\subsection{Transition vers l'analyse stratégique}
+Le problème principal étant clairement défini et la solution technique (JobMatcher basée sur Neo4j) validée sur le principe, il convient désormais d'étudier l'environnement concurrentiel, de définir la stratégie de réalisation et de modéliser les processus métier en détail. Ce sera l'objet du chapitre suivant consacré à la conception et à l'architecture.
+
+% =========================================================
+% CHAPITRE 2 : Analyse Stratégique & Étude de Marché
+% =========================================================
+\chapter{Analyse Stratégique \& Étude de Marché}
+
+\section{Présentation du secteur et tendances}
+
+\subsection{Taille du marché, chiffres clés, tendances}
+Le marché mondial des technologies des ressources humaines (HR Tech), et plus spécifiquement celui des logiciels de recrutement (Applicant Tracking Systems et plateformes de matching), connaît une croissance fulgurante. Évalué à plusieurs milliards de dollars, il devrait poursuivre une croissance à deux chiffres dans les années à venir. Les tendances majeures incluent l'intégration de l'intelligence artificielle pour l'automatisation du tri, l'importance grandissante de l'expérience candidat, et l'utilisation de la data pour le recrutement prédictif. Le marché s'oriente vers des solutions capables non seulement de stocker des CV, mais de comprendre réellement les compétences techniques et transversales.
+
+\subsection{Acteurs principaux et dynamiques du secteur}
+Le secteur est très fragmenté et dynamique. On y trouve :
+\begin{itemize}
+    \item \textbf{Les géants généralistes :} LinkedIn, Indeed, Glassdoor.
+    \item \textbf{Les éditeurs d'ATS traditionnels :} Workday, SAP SuccessFactors, Taleo.
+    \item \textbf{Les startups HR Tech innovantes :} Plateformes spécialisées dans le matching par IA, l'évaluation de compétences techniques (CodinGame, HackerRank) ou le recrutement par affinité culturelle.
+\end{itemize}
+La dynamique actuelle pousse les entreprises à délaisser les ATS vieillissants au profit d'outils plus intelligents et interconnectés.
+
+\section{Analyse PESTEL}
+
+Afin d'évaluer l'environnement macro-économique de JobMatcher, nous avons réalisé une analyse PESTEL :
+
+\subsection{Facteurs Politique, Économique, Social}
+\begin{itemize}
+    \item \textbf{Politique :} Soutien gouvernemental à la digitalisation des entreprises et à l'emploi (subventions pour l'embauche, programmes de reconversion).
+    \item \textbf{Économique :} Pénurie de talents dans certains secteurs clés (notamment l'IT), obligeant les entreprises à investir pour réduire leur temps de recrutement et éviter le coût élevé d'un poste vacant.
+    \item \textbf{Social :} Changement des attentes des candidats (quête de sens, télétravail, transparence). Les nouvelles générations privilégient les entreprises utilisant des processus de recrutement modernes et réactifs.
+\end{itemize}
+
+\subsection{Facteurs Technologique, Environnemental, Légal}
+\begin{itemize}
+    \item \textbf{Technologique :} Maturation des technologies de graphes (Neo4j), de traitement du langage naturel (NLP), et des algorithmes d'IA qui rendent possible un matching sémantique poussé.
+    \item \textbf{Environnemental :} Digitalisation complète du processus de recrutement, réduisant la consommation de papier et les déplacements inutiles grâce aux processus ciblés.
+    \item \textbf{Légal :} Réglementations strictes sur la protection des données personnelles (RGPD en Europe, Loi 09-08 au Maroc). Nécessité absolue de garantir la confidentialité et la sécurisation des données des candidats et recruteurs.
+\end{itemize}
+
+\section{Étude concurrentielle}
+
+\subsection{Tableau des concurrents directs et indirects}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{|p{3cm}|p{4cm}|p{4cm}|p{3.5cm}|}
+\hline
+\textbf{Acteur} & \textbf{Type de concurrent} & \textbf{Force Principale} & \textbf{Faiblesse Principale} \\
+\hline
+LinkedIn Recruiter & Indirect (Réseau Social) & Base de données mondiale, position dominante & Coût très élevé, matching basé sur des mots-clés simples \\
+\hline
+Welcome to the Jungle & Direct (Plateforme de marque employeur) & Excellente expérience candidat et UX & Moins axé sur la technologie de matching profond \\
+\hline
+ATS Classiques (ex: Taleo) & Indirect (Logiciels RH) & Intégration globale SIRH & Systèmes lourds, algorithmes de tri souvent basiques \\
+\hline
+Startups de matching IA & Direct (Nouveaux entrants) & Algorithmes innovants & Manque de notoriété, complexité d'intégration \\
+\hline
+\end{tabular}
+\caption{Analyse des concurrents de JobMatcher}
+\end{table}
+
+\subsection{Analyse comparative (forces / faiblesses / prix)}
+Par rapport à la concurrence, les solutions existantes se concentrent souvent sur le volume ou la marque employeur, négligeant la finesse sémantique du matching. Les ATS classiques sont onéreux et peu appréciés des utilisateurs finaux en raison de leur rigidité. Les prix varient d'un abonnement mensuel abordable pour les plateformes émergentes à des licences très coûteuses pour les solutions d'entreprise.
+
+\section{Les 5 Forces de Porter}
+
+\subsection{Analyse des 5 forces}
+\begin{enumerate}
+    \item \textbf{Intensité de la concurrence (Forte) :} De nombreux acteurs sont présents sur le marché des HR Tech.
+    \item \textbf{Menace des nouveaux entrants (Moyenne) :} Barrières technologiques modérées, mais forte nécessité d'acquérir une base critique d'utilisateurs (effet réseau).
+    \item \textbf{Pouvoir de négociation des clients - Recruteurs (Fort) :} Ils ont l'embarras du choix et cherchent un retour sur investissement rapide (réduction du temps de recrutement).
+    \item \textbf{Pouvoir de négociation des fournisseurs - Candidats (Fort) :} Sur certains secteurs en tension (comme l'IT), les candidats dictent les règles du marché.
+    \item \textbf{Menace des produits de substitution (Faible) :} Les cabinets de chasseurs de têtes traditionnels existent, mais ils sont très chers et réservés aux postes de direction.
+\end{enumerate}
+
+\subsection{Synthèse et attractivité du secteur}
+Bien que concurrentiel, le secteur reste très attractif. L'insatisfaction persistante liée au temps perdu dans le tri manuel et les erreurs de casting laisse une grande place pour un outil innovant, agile et précis comme JobMatcher.
+
+\section{Analyse SWOT consolidée}
+
+\subsection{Forces et Faiblesses internes}
+\begin{itemize}
+    \item \textbf{Forces (Strengths) :} Technologie innovante (Base de graphes Neo4j), extraction automatisée (PDFBox), algorithme de matching sémantique, architecture moderne (Spring Boot).
+    \item \textbf{Faiblesses (Weaknesses) :} Projet naissant (pas de base de données initiale), ressources limitées pour le développement commercial et le marketing au démarrage.
+\end{itemize}
+
+\subsection{Opportunités et Menaces externes}
+\begin{itemize}
+    \item \textbf{Opportunités (Opportunities) :} Forte demande pour l'automatisation RH, pénurie de profils techniques, adoption croissante de l'IA par les entreprises.
+    \item \textbf{Menaces (Threats) :} Réticence au changement des équipes RH habituées à leurs outils, évolution stricte de la législation sur la protection des données (RGPD).
+\end{itemize}
+
+\subsection{Stratégies SO / ST / WO / WT}
+\begin{itemize}
+    \item \textbf{Stratégie SO (Forces-Opportunités) :} Capitaliser sur notre architecture Graphe pour proposer le matching le plus précis aux entreprises touchées par la pénurie de talents.
+    \item \textbf{Stratégie ST (Forces-Menaces) :} Mettre en avant la transparence de l'algorithme pour rassurer sur la conformité de la protection des données.
+    \item \textbf{Stratégie WO (Faiblesses-Opportunités) :} S'allier avec des écoles ou de petites agences de recrutement pour acquérir rapidement notre première base de données d'utilisateurs.
+    \item \textbf{Stratégie WT (Faiblesses-Menaces) :} Adopter une stratégie de niche (par exemple, uniquement les profils IT) pour éviter une confrontation directe avec les géants généralistes au lancement.
+\end{itemize}
+
+\section{Étude de la demande}
+
+\subsection{Comportement consommateurs et besoins du marché}
+Les recruteurs recherchent un retour sur investissement rapide, mesuré par la réduction du "Time to Hire" (temps de recrutement) et du coût par embauche. Ils ont besoin de tableaux de bord intuitifs et de suggestions de profils justifiées. Les candidats souhaitent un processus transparent, des retours rapides et des recommandations d'offres pertinentes par rapport à leur profil technique.
+
+\subsection{Willingness to pay et tarification potentielle}
+Les candidats n'accepteront pas de payer pour postuler (modèle freemium côté candidat essentiel). La valeur étant perçue par les entreprises, le modèle de revenus doit cibler les recruteurs. La tarification pourrait reposer sur :
+\begin{itemize}
+    \item Un modèle SaaS (abonnement mensuel basé sur le nombre de recruteurs ou de CV traités).
+    \item Un modèle "Pay per match" ou au succès, très attractif pour les petites structures.
+\end{itemize}
+
+\section{Positionnement et proposition de valeur}
+
+\subsection{Proposition de valeur unique (UVP)}
+\textbf{JobMatcher : "Recrutez au-delà des mots-clés."} \\
+Notre plateforme garantit un gain de temps de 50\% dans le tri des candidatures en cartographiant les relations réelles entre les compétences de vos candidats et les besoins de vos offres grâce à notre technologie de graphe.
+
+\subsection{Différenciation par rapport à la concurrence}
+Contrairement aux ATS classiques qui filtrent par présence ou absence d'un mot-clé de manière binaire, JobMatcher comprend la proximité technologique. Si un poste demande "React" et qu'un candidat maîtrise "Vue.js", le graphe identifiera une relation de proximité (Framework Frontend) et proposera le candidat avec un score d'adaptabilité, plutôt que de le rejeter, offrant ainsi une profondeur d'analyse inédite sur le marché.
+
+% =========================================================
+% CHAPITRE 3 : Cadrage du Projet
+% =========================================================
+\chapter{Cadrage du Projet}
+
+\section{Tableau de cadrage complet (Charte Projet)}
+
+Le cadrage du projet constitue la fondation sur laquelle repose la réussite de JobMatcher. Il permet d'aligner la vision et de délimiter précisément l'intervention.
+
+\subsection{Contexte et objectif général}
+Dans un contexte de digitalisation des processus de recrutement et de surcharge informationnelle des recruteurs, l'objectif général du projet est de développer et déployer une plateforme web intelligente qui optimise la mise en relation entre les offres d'emploi et les profils des candidats grâce à l'analyse sémantique et la modélisation sous forme de graphes.
+
+\subsection{Objectifs spécifiques (SMART)}
+\begin{itemize}
+    \item \textbf{Spécifique :} Automatiser l'extraction des données des CV et calculer un score de matching basé sur les compétences.
+    \item \textbf{Mesurable :} Atteindre un taux d'extraction correct de 85\% sur les CV standardisés et générer le score de matching en moins de 3 secondes.
+    \item \textbf{Atteignable :} Utiliser des bibliothèques reconnues (PDFBox) et une base de données optimisée pour les relations (Neo4j).
+    \item \textbf{Réaliste :} Se concentrer d'abord sur le secteur de l'IT pour valider le modèle.
+    \item \textbf{Temporel :} Finaliser la version MVP (Minimum Viable Product) pour la soutenance de fin d'année académique.
+\end{itemize}
+
+\subsection{Périmètre inclus et exclus}
+\begin{itemize}
+    \item \textbf{Inclus :} Inscription utilisateurs (recruteurs/candidats), upload de CV (PDF), extraction des compétences, création d'offres, algorithme de matching, tableau de bord recruteur.
+    \item \textbf{Exclus :} Passation d'entretiens vidéo, gestion de la paie, tests techniques en ligne, facturation automatisée.
+\end{itemize}
+
+\subsection{Parties prenantes}
+\begin{itemize}
+    \item \textbf{Équipe projet :} Étudiants concepteurs et développeurs de la solution.
+    \item \textbf{Encadrement :} Le professeur encadrant validant les choix techniques et académiques.
+    \item \textbf{Utilisateurs finaux :} Candidats en recherche d'emploi et professionnels du recrutement (utilisateurs de test).
+\end{itemize}
+
+\subsection{Contraintes (délai, budget, techniques)}
+\begin{itemize}
+    \item \textbf{Délai :} Respect strict du calendrier académique (livraison du projet et du rapport avant la soutenance).
+    \item \textbf{Budget :} Projet académique nécessitant l'utilisation d'outils Open Source (Neo4j Community Edition, Spring Boot, etc.) sans budget d'investissement logiciel externe.
+    \item \textbf{Techniques :} Nécessité d'intégrer de manière transparente le moteur de base de données Neo4j avec un backend Java Spring Boot et d'assurer un traitement fluide des fichiers PDF.
+\end{itemize}
+
+\subsection{Livrables attendus, critères de réussite, hypothèses}
+\begin{itemize}
+    \item \textbf{Livrables :} Code source documenté, application déployable en local, rapport de projet, support de présentation.
+    \item \textbf{Critères de réussite :} Application fonctionnelle sans bugs bloquants, démonstration réussie de l'algorithme de matching lors de la soutenance.
+    \item \textbf{Hypothèses :} L'API d'extraction PDFBox sera suffisante pour structurer les compétences de la majorité des CV IT sans recourir systématiquement à une IA coûteuse au démarrage.
+\end{itemize}
+
+\section{Choix et justification du cycle de vie}
+
+\subsection{Comparaison des modèles}
+Plusieurs méthodologies de gestion de projet existent :
+\begin{itemize}
+    \item \textbf{Cascade (Waterfall) :} Rigide, les phases s'enchaînent sans retour en arrière. Adapté aux cahiers des charges figés.
+    \item \textbf{Agile / Scrum :} Itératif, centré sur la livraison de valeur continue et la flexibilité.
+    \item \textbf{Hybride :} Combine la structuration de la Cascade pour les phases initiales et l'Agilité pour la réalisation technique.
+\end{itemize}
+
+\subsection{Modèle retenu et justification}
+Pour la réalisation de JobMatcher, nous avons opté pour le modèle \textbf{Agile (méthode Scrum adaptée)}. 
+\textit{Justification :} L'algorithme de matching graphe nécessitera plusieurs ajustements et tests continus. La méthode Agile nous permet de développer de manière incrémentale (Sprints de 2 semaines), de présenter des fonctionnalités testables rapidement (ex: Sprint 1 pour l'extraction de CV, Sprint 2 pour la modélisation Neo4j), et d'adapter l'application selon les retours obtenus sans remettre en cause l'ensemble de l'architecture.
+
+\section{Étude critique de l'existant}
+
+\subsection{Solutions existantes}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{|p{3cm}|p{5cm}|p{5cm}|}
+\hline
+\textbf{Solution} & \textbf{Description} & \textbf{Limitations Majeures} \\
+\hline
+Systèmes ATS classiques (Taleo, etc.) & Logiciels lourds gérant le flux global des candidatures pour les grandes entreprises. & Filtres rigides basés sur la recherche exacte de mots-clés. Incapables d'identifier les compétences transversales ou implicites. \\
+\hline
+Sites de Job Board (LinkedIn, Indeed) & Plateformes de visibilité et de mise en relation de masse. & Recommandations souvent peu pertinentes car fondées sur des critères de base (titre du poste, localisation) sans analyse fine des profils techniques. \\
+\hline
+Startups d'IA sémantique & Plateformes récentes utilisant le machine learning pour évaluer les CV. & Modèles "boîtes noires" difficiles à expliquer aux recruteurs, coûts d'intégration très élevés. \\
+\hline
+\end{tabular}
+\caption{Tableau critique des solutions existantes}
+\end{table}
+
+\subsection{Critique argumentée de l'existant}
+La limite principale des outils actuels (notamment les ATS) est leur dépendance aux bases de données relationnelles traditionnelles (SQL). Ces systèmes sont performants pour des requêtes simples, mais se heurtent à un mur de complexité et de lenteur lorsqu'il s'agit de calculer la proximité sémantique entre plusieurs compétences, expériences et exigences d'un poste. Le recrutement moderne souffre de la rigidité binaire de l'existant : un mot-clé est soit présent, soit absent, ignorant totalement la richesse et la transférabilité des compétences d'un candidat.
+
+\section{Justification et différenciation de la solution proposée}
+
+\subsection{Avantages différenciateurs de la solution}
+Le recours à une base de données orientée graphe (Neo4j) est le cœur de notre différenciation. Contrairement à une approche tabulaire, le graphe place \textit{les relations} au même niveau d'importance que les \textit{données} elles-mêmes. 
+Dans JobMatcher, si l'offre requiert le framework "Spring Boot" et que le candidat possède la compétence "Java EE", le système identifiera une forte proximité relationnelle dans le graphe des technologies informatiques. Le candidat ne sera pas rejeté arbitrairement, mais classé avec un score de pertinence, offrant ainsi un net avantage concurrentiel pour dénicher les talents adéquats.
+
+\subsection{Positionnement technique et fonctionnel}
+\begin{itemize}
+    \item \textbf{Technique :} JobMatcher se positionne comme un produit performant et scalable. L'intégration de Neo4j avec l'écosystème Spring Boot garantit une architecture robuste, et l'extraction automatisée avec PDFBox offre une autonomie totale sans dépendance coûteuse à des API cloud externes.
+    \item \textbf{Fonctionnel :} L'outil se veut être un "assistant" intelligent pour le recruteur. L'objectif n'est pas de remplacer la décision humaine, mais de l'éclairer en remontant les meilleurs profils "cachés" que les anciens outils auraient écartés.
+\end{itemize}
+
+% =========================================================
+% CHAPITRE 4 : Spécification des Besoins
+% =========================================================
+\chapter{Spécification des Besoins}
+
+Ce chapitre détaille les exigences fonctionnelles et non fonctionnelles du système JobMatcher. Il sert de cahier des charges technique pour la phase de conception et de réalisation.
+
+\section{Identification des parties prenantes et utilisateurs}
+
+\subsection{Liste des parties prenantes (internes / externes)}
+\begin{itemize}
+    \item \textbf{Parties prenantes internes :} L'équipe de développement (étudiants), le chef de projet, l'encadrant académique (EMSI).
+    \item \textbf{Parties prenantes externes :} Les candidats en recherche d'emploi, les recruteurs (agences RH ou départements internes d'entreprises), les administrateurs de la plateforme.
+\end{itemize}
+
+\subsection{Profils utilisateurs (Acteurs UML)}
+Nous distinguons trois acteurs principaux interagissant avec le système :
+\begin{enumerate}
+    \item \textbf{Candidat :} Cherche à postuler facilement, souhaite que ses compétences soient comprises à leur juste valeur.
+    \item \textbf{Recruteur :} Cherche à créer des offres et à obtenir rapidement une liste de candidats classés par pertinence (matching).
+    \item \textbf{Administrateur :} Supervise la plateforme, gère les accès, et maintient le bon fonctionnement du graphe de compétences.
+\end{enumerate}
+
+\section{Besoins fonctionnels}
+
+\subsection{Besoins par profil utilisateur}
+\textbf{Pour le Candidat :}
+\begin{itemize}
+    \item Créer et gérer son profil.
+    \item Uploader un CV au format PDF.
+    \item Visualiser les compétences extraites automatiquement de son CV.
+    \item Consulter les offres d'emploi recommandées.
+\end{itemize}
+
+\textbf{Pour le Recruteur :}
+\begin{itemize}
+    \item Créer, modifier et publier des offres d'emploi (description, compétences requises).
+    \item Lancer l'algorithme de matching sur une offre spécifique.
+    \item Consulter le classement des candidats (score de pertinence) pour une offre.
+    \item Visualiser le détail d'un profil candidat et le graphe des compétences correspondantes.
+\end{itemize}
+
+\subsection{Tableau des fonctionnalités prioritaires (Méthode MoSCoW)}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{|p{2cm}|p{12cm}|}
+\hline
+\textbf{Priorité} & \textbf{Fonctionnalités} \\
+\hline
+\textbf{Must have} (Indispensable) & Inscription/Connexion, Upload de CV PDF, Extraction de texte (PDFBox), Création d'offres (Recruteur), Stockage dans Neo4j (nœuds Candidat, Offre, Compétence), Algorithme de matching basique. \\
+\hline
+\textbf{Should have} (Important) & Tableau de bord récapitulatif pour le recruteur, visualisation basique du score de matching, édition manuelle des compétences extraites par le candidat. \\
+\hline
+\textbf{Could have} (Optionnel) & Intégration d'un assistant IA textuel, visualisation interactive du graphe dans l'interface, notifications par email. \\
+\hline
+\textbf{Won't have} (Exclu pour ce MVP) & Passation d'entretiens vidéo, système de facturation premium, application mobile native. \\
+\hline
+\end{tabular}
+\caption{Priorisation des fonctionnalités (MoSCoW)}
+\end{table}
+
+\section{Besoins non fonctionnels}
+
+\subsection{Performance, disponibilité, scalabilité}
+\begin{itemize}
+    \item \textbf{Performance :} L'extraction des données d'un CV PDF doit s'effectuer en moins de 2 secondes. L'algorithme de calcul du score de matching via le graphe Neo4j doit retourner les résultats en moins de 3 secondes pour une base de 1000 nœuds.
+    \item \textbf{Disponibilité :} L'application web doit être disponible en continu (objectif 99\% d'uptime) durant les phases de test.
+    \item \textbf{Scalabilité :} L'architecture Spring Boot / Neo4j doit permettre de monter en charge sans restructuration profonde de la base de données.
+\end{itemize}
+
+\subsection{Sécurité, confidentialité, conformité RGPD}
+\begin{itemize}
+    \item \textbf{Sécurité :} Les mots de passe doivent être hachés en base de données. Les requêtes entre le frontend et le backend doivent être sécurisées.
+    \item \textbf{Confidentialité \& RGPD :} Les candidats doivent pouvoir supprimer l'intégralité de leurs données (droit à l'oubli). Les CV uploadés ne doivent être accessibles qu'aux recruteurs autorisés.
+\end{itemize}
+
+\subsection{Accessibilité, ergonomie, compatibilité}
+\begin{itemize}
+    \item \textbf{Ergonomie :} L'interface doit être intuitive (UI moderne) pour réduire le temps de prise en main par les recruteurs.
+    \item \textbf{Compatibilité :} Application "Responsive Web Design", compatible avec les navigateurs modernes (Chrome, Firefox, Safari).
+\end{itemize}
+
+\section{Contraintes techniques}
+
+\subsection{Technologies imposées ou préférées}
+Dans le cadre de la validation académique et de la robustesse visée, les choix technologiques suivants ont été arrêtés :
+\begin{itemize}
+    \item \textbf{Backend :} Java avec le framework Spring Boot (Spring Web, Spring Data Neo4j).
+    \item \textbf{Base de données :} Neo4j (Base de données orientée graphe) pour la modélisation sémantique et relationnelle.
+    \item \textbf{Traitement de fichiers :} Apache PDFBox pour l'extraction de texte à partir des CV (format PDF).
+    \item \textbf{Frontend :} HTML5, CSS3, JavaScript (intégré dans les vues Spring MVC).
+\end{itemize}
+
+\subsection{Interopérabilité et contraintes d'intégration}
+Le système backend doit exposer des contrôleurs clairs afin de permettre une éventuelle séparation stricte du frontend à l'avenir. L'intégration de PDFBox doit se faire de manière isolée dans un module de service pour faciliter son remplacement éventuel par un moteur plus puissant si nécessaire.
+
+\section{Matrice de traçabilité besoins–fonctionnalités–modules}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{|p{2cm}|p{5cm}|p{4cm}|p{3cm}|}
+\hline
+\textbf{ID Besoin} & \textbf{Description du besoin} & \textbf{Fonctionnalité} & \textbf{Module technique} \\
+\hline
+BF-01 & Le candidat doit pouvoir soumettre son CV. & Upload PDF & Contrôleur Web \\
+\hline
+BF-02 & Le système doit lire le contenu du CV. & Extraction de texte & Module PDFBox \\
+\hline
+BF-03 & Les compétences doivent être stockées en graphe. & Création des nœuds & Spring Data Neo4j \\
+\hline
+BF-04 & Le recruteur trouve les candidats adaptés. & Algorithme Matching & Service Graphe Neo4j \\
+\hline
+BNF-01 & Les données doivent être sécurisées. & Authentification & Spring Security \\
+\hline
+\end{tabular}
+\caption{Matrice de traçabilité}
+\end{table}
+
+% =========================================================
+% CHAPITRE 5 : Planification & Management de Projet
+% =========================================================
+\chapter{Planification \& Management de Projet}
+
+La réussite de JobMatcher nécessite une organisation rigoureuse. Ce chapitre détaille la structuration, la planification et la gestion des risques du projet.
+
+\section{Work Breakdown Structure (WBS)}
+
+\subsection{Décomposition hiérarchique des livrables}
+Le projet a été décomposé en 4 grands lots de travaux :
+\begin{itemize}
+    \item \textbf{Lot 1 : Gestion de Projet} (Cadrage, Planification, Rédaction du rapport).
+    \item \textbf{Lot 2 : Conception} (Architecture, Modélisation Neo4j, Maquettes UI/UX).
+    \item \textbf{Lot 3 : Réalisation Backend \& Base de Données} (Intégration PDFBox, Configuration Spring Boot, Cypher Queries).
+    \item \textbf{Lot 4 : Réalisation Frontend \& Intégration} (Développement UI, Liaison API, Tests de matching).
+\end{itemize}
+
+\subsection{Représentation graphique du WBS}
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.8\textwidth]{images/wbs.png}
+    \caption{Représentation graphique du WBS}
+    \label{fig:wbs}
+\end{figure}
+
+\section{Planification détaillée et Diagramme de Gantt}
+
+\subsection{Tableau des tâches}
+\begin{table}[h]
+\centering
+\begin{tabular}{|p{1cm}|p{6cm}|p{2cm}|p{3cm}|}
+\hline
+\textbf{Code} & \textbf{Description de la Tâche} & \textbf{Durée (Jours)} & \textbf{Prédécesseur} \\
+\hline
+T1 & Cadrage et Spécifications & 5 & - \\
+\hline
+T2 & Modélisation Graphe Neo4j & 4 & T1 \\
+\hline
+T3 & Développement Extraction PDFBox & 6 & T1 \\
+\hline
+T4 & Implémentation Backend Spring Boot & 10 & T2, T3 \\
+\hline
+T5 & Développement Algorithme Matching & 7 & T4 \\
+\hline
+T6 & Développement Frontend \& UI & 8 & T2 \\
+\hline
+T7 & Intégration et Tests globaux & 5 & T5, T6 \\
+\hline
+T8 & Rédaction du Rapport final & 4 & T7 \\
+\hline
+\end{tabular}
+\caption{Liste des tâches pour le diagramme de Gantt}
+\end{table}
+
+\subsection{Diagramme de Gantt et Chemin critique}
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.9\textwidth]{images/gantt.png}
+    \caption{Diagramme de Gantt prévisionnel avec jalons}
+    \label{fig:gantt}
+\end{figure}
+Le chemin critique est la séquence de tâches qui détermine la durée totale du projet. Tout retard sur ce chemin retarde la livraison finale. 
+Pour JobMatcher, le \textbf{chemin critique} est identifié comme suit : \\
+\textbf{T1 $\rightarrow$ T3 $\rightarrow$ T4 $\rightarrow$ T5 $\rightarrow$ T7 $\rightarrow$ T8.} \\
+Le développement de l'extraction PDF (T3) suivi de la création du backend (T4) et de l'algorithme (T5) constituent le cœur incompressible du projet. Le frontend (T6), pouvant être développé en parallèle de T3 et T4 grâce à des API mockées, dispose d'une marge libre.
+
+\section{Matrice RACI}
+
+\subsection{Tableau RACI complet}
+(R : Réalisateur, A : Approbateur/Responsable, C : Consulté, I : Informé)
+
+\begin{table}[h]
+\centering
+\begin{tabular}{|p{4cm}|p{2.5cm}|p{2.5cm}|p{2.5cm}|p{2.5cm}|}
+\hline
+\textbf{Tâche} & \textbf{Chef de Projet} & \textbf{Dév Backend} & \textbf{Dév Frontend} & \textbf{Encadrant} \\
+\hline
+Spécifications (T1) & R, A & C & C & I \\
+\hline
+Modèle Neo4j (T2) & A & R & C & C \\
+\hline
+Module PDFBox (T3) & A & R & I & I \\
+\hline
+Algorithme Matching (T5) & A & R & I & C \\
+\hline
+Interface Web (T6) & A & C & R & I \\
+\hline
+Validation et Tests (T7) & R, A & R & R & I \\
+\hline
+\end{tabular}
+\caption{Matrice RACI du projet JobMatcher}
+\end{table}
+
+\subsection{Justification des choix critiques}
+L'\textbf{Encadrant} est "Consulté" (C) principalement sur les choix architecturaux complexes (Neo4j, Algorithme) pour valider la démarche scientifique. Le \textbf{Chef de Projet} porte l'Autorité (A) sur chaque livrable technique pour garantir la cohérence d'ensemble avant la phase de test.
+
+\section{Gestion des risques et Analyse Pareto}
+
+\subsection{Registre des risques (probabilité × impact)}
+Nous avons identifié 4 risques majeurs évalués sur une échelle de 1 (faible) à 4 (très fort) :
+\begin{enumerate}
+    \item \textbf{R1 - Extraction PDF imprécise} : Proba (3) x Impact (4) = 12
+    \item \textbf{R2 - Lenteur des requêtes Cypher (Neo4j)} : Proba (2) x Impact (3) = 6
+    \item \textbf{R3 - Retard sur le planning (Surcharge de travail)} : Proba (3) x Impact (3) = 9
+    \item \textbf{R4 - Incompatibilité version Spring/Neo4j} : Proba (1) x Impact (4) = 4
+\end{enumerate}
+
+\subsection{Analyse Pareto (Loi des 80/20) et Mitigation}
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.7\textwidth]{images/matrice_risques.png}
+    \caption{Matrice probabilité/impact (carte de chaleur)}
+    \label{fig:matrice_risques}
+\end{figure}
+L'analyse montre que le risque \textbf{R1 (Extraction PDF imprécise)} concentre la plus grande part de la criticité du projet. En effet, si l'extraction des données du CV échoue, le graphe sera vide et le matching impossible.
+\begin{itemize}
+    \item \textbf{Plan de mitigation pour R1 :} Imposer un format standard de CV pour la phase de test (MVP) ou intégrer une étape de validation manuelle par le candidat après extraction automatique.
+    \item \textbf{Plan de contingence pour R3 :} Réduire le périmètre fonctionnel (passer des fonctionnalités "Should have" en "Won't have" selon la matrice MoSCoW) pour garantir la livraison de l'algorithme cœur.
+\end{itemize}
+
+\section{Outils de pilotage et de suivi}
+
+\subsection{Outils utilisés}
+Pour garantir la communication et le suivi, nous avons mis en place une stack d'outils modernes :
+\begin{itemize}
+    \item \textbf{Gestion des tâches (Kanban) :} GitHub Projects (ou Trello) pour suivre les tickets (To Do, In Progress, Review, Done).
+    \item \textbf{Versionning du code :} Git et GitHub, avec une politique de branches (feature-branches, dev, main).
+    \item \textbf{Communication :} Discord ou MS Teams pour les réunions d'équipe à distance.
+\end{itemize}
+
+\subsection{Fréquence et mode des réunions de suivi}
+En accord avec la méthode Agile, nous adoptons des réunions régulières :
+\begin{itemize}
+    \item \textbf{Daily Stand-up} : 15 minutes par jour pour synchroniser l'équipe (Ce que j'ai fait hier, ce que je fais aujourd'hui, les points bloquants).
+    \item \textbf{Revue de Sprint} : Toutes les 2 semaines pour valider les incréments avec l'encadrant.
+\end{itemize}
+
+\section{Critères de réussite du projet}
+
+\subsection{KPIs techniques}
+\begin{itemize}
+    \item \textbf{Taux de couverture du code} : $> 70\%$ sur les services critiques (matching).
+    \item \textbf{Temps de réponse de l'API} : $< 200$ ms pour une requête de profil basique.
+    \item \textbf{Précision de l'extraction} : Les entités clés (Nom, Prénom, 5 compétences majeures) correctement identifiées sur 8 CV sur 10.
+\end{itemize}
+
+\subsection{KPIs managériaux et entrepreneuriaux}
+\begin{itemize}
+    \item \textbf{Respect du planning} : Écart entre date prévue et date réelle de livraison (objectif $< 10\%$).
+    \item \textbf{Indice de satisfaction utilisateur (testeurs)} : Note supérieure à 8/10 sur l'utilisabilité de l'interface recruteur.
+\end{itemize}
+
+% =========================================================
+% CHAPITRE 6 : Conception du Système
+% =========================================================
+\chapter{Conception du Système}
+
+La phase de conception permet de traduire les spécifications en une architecture technique et fonctionnelle robuste. Ce chapitre décrit les choix architecturaux et présente les différents modèles UML du projet JobMatcher.
+
+\section{Architecture globale du système}
+
+\subsection{Architecture logicielle (N-tiers et MVC)}
+L'application JobMatcher repose sur une \textbf{architecture N-tiers} combinée au motif de conception \textbf{MVC (Modèle-Vue-Contrôleur)} via le framework Spring Boot :
+\begin{itemize}
+    \item \textbf{Couche Présentation (Vue/Contrôleur) :} Gère l'interface utilisateur (HTML/CSS/JS) et intercepte les requêtes HTTP via les contrôleurs Spring MVC.
+    \item \textbf{Couche Métier (Service) :} Contient la logique applicative (algorithme de matching, appel à PDFBox pour l'extraction des CV).
+    \item \textbf{Couche Accès aux Données (Modèle) :} Gérée par Spring Data Neo4j (SDN) qui mappe les objets Java (Entities) vers les nœuds et relations de la base de données graphe.
+\end{itemize}
+
+\subsection{Architecture matérielle / Cloud / Infrastructure}
+Pour le déploiement (MVP), l'architecture cible est la suivante :
+\begin{itemize}
+    \item \textbf{Serveur d'application :} Un conteneur Docker hébergeant l'application Spring Boot.
+    \item \textbf{Serveur de base de données :} Une instance Neo4j (ex: Neo4j AuraDB pour le Cloud, ou locale en développement).
+    \item \textbf{Stockage de fichiers :} Stockage local temporaire pour les fichiers PDF des CV avant traitement.
+\end{itemize}
+
+\subsection{Schéma d'architecture global et MVC}
+\subsubsection{Architecture Backend Spring Boot}
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.9\textwidth]{images/architecture.png}
+    \caption{Architecture Backend Spring Boot}
+    \label{fig:architecture}
+\end{figure}
+
+\subsection{Diagramme de déploiement}
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.9\textwidth]{images/deploiement.png}
+    \caption{Diagramme de déploiement de l'infrastructure}
+    \label{fig:deploiement}
+\end{figure}
+
+\section{Modélisation des cas d'utilisation (UML)}
+
+\subsection{Liste des acteurs du système}
+\begin{itemize}
+    \item \textbf{Candidat :} Acteur principal s'inscrivant pour trouver un emploi en soumettant son CV.
+    \item \textbf{Recruteur :} Acteur professionnel publiant des offres et cherchant des profils correspondants.
+    \item \textbf{Administrateur :} Acteur secondaire gérant le bon fonctionnement technique de la plateforme.
+\end{itemize}
+
+\subsection{Diagramme de cas d’utilisation global}
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.8\textwidth]{images/cas_utilisation.png}
+    \caption{Diagramme de cas d’utilisation global}
+    \label{fig:cas_utilisation}
+\end{figure}
+
+\subsection{Description textuelle des CU principaux}
+\textbf{CU 1 : Importer un CV (Candidat)}
+\begin{itemize}
+    \item \textit{Acteur :} Candidat
+    \item \textit{Précondition :} Le candidat est authentifié.
+    \item \textit{Scénario nominal :} Le candidat sélectionne son CV (format PDF) $\rightarrow$ Le système valide le format $\rightarrow$ PDFBox extrait le texte $\rightarrow$ Le système identifie les compétences et les lie au profil du candidat dans Neo4j $\rightarrow$ Confirmation de l'import.
+\end{itemize}
+
+\textbf{CU 2 : Effectuer un Matching (Recruteur)}
+\begin{itemize}
+    \item \textit{Acteur :} Recruteur
+    \item \textit{Précondition :} Le recruteur a créé une offre d'emploi.
+    \item \textit{Scénario nominal :} Le recruteur clique sur "Trouver des profils" pour une offre $\rightarrow$ Le système exécute une requête Cypher complexe $\rightarrow$ Le graphe Neo4j calcule la proximité entre les compétences requises et celles des candidats $\rightarrow$ Le système affiche une liste de candidats triée par score de pertinence.
+\end{itemize}
+
+\section{Modélisation dynamique}
+
+\subsection{Diagramme de sequences (Upload CV et recommandation d’offres)}
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.9\textwidth]{images/seq_upload_reco.png}
+    \caption{Diagramme de sequences (Upload CV et recommandation d’offres)}
+    \label{fig:seq_upload_reco}
+\end{figure}
+
+\subsection{Diagramme de sequences (— Ajout de Compétences \& Candidature (Candidat $\leftrightarrow$ Neo4j))}
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.9\textwidth]{images/sequence_candidature.png}
+    \caption{Diagramme de sequences (Ajout de Compétences \& Candidature)}
+    \label{fig:seq_candidature}
+\end{figure}
+
+\subsection{Diagramme de sequences (Recommandations (Candidat $\leftrightarrow$ Neo4j matching))}
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.9\textwidth]{images/sequence_matching.png}
+    \caption{Diagramme de sequences (Recommandations)}
+    \label{fig:seq_matching}
+\end{figure}
+
+\subsection{Diagrammes d'activité (processus métier clés)}
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.8\textwidth]{images/activite_extraction.png}
+    \caption{Diagramme d'activité : Extraction de CV}
+    \label{fig:act_extraction}
+\end{figure}
+Le processus inclut des branchements conditionnels (ex: le fichier est-il bien un PDF ?, le texte contient-il des compétences reconnues dans notre ontologie ?).
+
+\section{Modélisation statique et Graphe}
+
+Bien que le projet utilise Neo4j, la modélisation objet (diagramme de classes) reste pertinente pour structurer le code Java. Le modèle relationnel classique est ici remplacé par un modèle de Graphe de Propriétés (Property Graph Model).
+
+\subsection{Diagramme de Classe}
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.9\textwidth]{images/diagramme_classes.png}
+    \caption{Diagramme de Classe}
+    \label{fig:classes}
+\end{figure}
+\begin{itemize}
+    \item \textbf{Recruteur (1) $\rightarrow$ (0..*) Offre}
+    \item \textbf{Candidat (1) $\rightarrow$ (1..*) Compétence} (Relation \texttt{MAITRISE})
+    \item \textbf{Offre (1) $\rightarrow$ (1..*) Compétence} (Relation \texttt{REQUIERT})
+\end{itemize}
+
+\subsection{Modèle de Graphe (Nœuds, Relations, Propriétés)}
+Contrairement au modèle relationnel classique (tables et clés étrangères), Neo4j utilise des Nœuds et des Relations typées.
+\begin{itemize}
+    \item \textbf{Nœuds :} \texttt{(c:Candidat)}, \texttt{(o:Offre)}, \texttt{(s:Skill)}, \texttt{(r:Recruteur)}.
+    \item \textbf{Relations :} \texttt{(c)-[:MAITRISE \{niveau: "Avancé"\}]->(s)}, \texttt{(o)-[:REQUIERT \{importance: "Obligatoire"\}]->(s)}, \texttt{(r)-[:PUBLIE]->(o)}.
+\end{itemize}
+
+\subsection{Dictionnaire de données (Nœuds et Attributs)}
+\begin{table}[h]
+\centering
+\begin{tabular}{|p{2.5cm}|p{3.5cm}|p{2cm}|p{6cm}|}
+\hline
+\textbf{Label Nœud} & \textbf{Propriété} & \textbf{Type} & \textbf{Description} \\
+\hline
+Candidat & id, nom, prenom, email, cvUrl & String & Identifiants et lien vers le CV physique \\
+\hline
+Recruteur & id, nomEntreprise, email & String & Informations sur l'entreprise \\
+\hline
+Offre & id, titre, description & String & Détails du poste proposé \\
+\hline
+Skill (Compétence) & nom, categorie & String & Ex: nom="React", categorie="Frontend" \\
+\hline
+\end{tabular}
+\caption{Dictionnaire des entités du Graphe Neo4j}
+\end{table}
+
+\section{Maquettes UX/UI et prototype Design Thinking}
+
+\subsection{Wireframes des interfaces principales}
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.8\textwidth]{images/wireframes.png}
+    \caption{Wireframes des interfaces principales}
+    \label{fig:wireframes}
+\end{figure}
+L'interface recruteur mettra en évidence une barre de recherche et une vue "Cartes" (Cards) pour chaque candidat matché, affichant son score en pourcentage.
+
+\subsection{Prototype cliquable (résultat Design Thinking)}
+Suite aux ateliers de Design Thinking, un prototype cliquable a été réalisé pour tester la navigation. 
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.9\textwidth]{images/prototype.png}
+    \caption{Prototype cliquable haute fidélité}
+    \label{fig:prototype}
+\end{figure}
+
+\subsection{Principes UX retenus (ergonomie, accessibilité)}
+\begin{itemize}
+\subsection{Principes UX retenus (ergonomie, accessibilité)}
+\begin{itemize}
+    \item \textbf{Loi de Fitts :} Les boutons d'action principaux ("Uploader CV", "Trouver Profils") sont de grande taille et isolés visuellement.
+    \item \textbf{Feedback visuel :} Affichage d'une barre de progression lors de l'extraction du PDF pour rassurer l'utilisateur (Loi de Doherty).
+    \item \textbf{Clarté du Score :} Le score de matching est affiché de manière visuelle (jauge de couleur verte/orange/rouge) pour une prise de décision instantanée du recruteur.
+\end{itemize}
+
+% =========================================================
+% CHAPITRE 7 : Réalisation & Implémentation
+% =========================================================
+\chapter{Réalisation \& Implémentation}
+
+Ce chapitre expose la concrétisation technique du projet JobMatcher. Il détaille l'environnement de développement, le déroulement des sprints, les interfaces réalisées ainsi que les phases de test garantissant la fiabilité du système.
+
+\section{Environnement de développement}
+
+\subsection{Stack technique}
+\begin{itemize}
+    \item \textbf{Langage principal :} Java (JDK récent), HTML5, CSS3, JavaScript.
+    \item \textbf{Framework Backend :} Spring Boot (Spring Web, Spring Data Neo4j).
+    \item \textbf{Base de données :} Neo4j (Graph Database).
+    \item \textbf{Traitement de documents :} Apache PDFBox (pour l'extraction du texte des CV).
+\end{itemize}
+
+\subsection{Outils de développement (IDE, versioning, CI/CD)}
+\begin{itemize}
+    \item \textbf{IDE (Environnement de Développement Intégré) :} IntelliJ IDEA ou Visual Studio Code.
+    \item \textbf{Gestion de versions :} Git avec GitHub pour le travail collaboratif.
+    \item \textbf{Gestion de dépendances :} Maven (via \texttt{pom.xml}).
+\end{itemize}
+
+\subsection{Justification des choix technologiques}
+Le choix de \textbf{Spring Boot} s'est imposé pour sa robustesse, sa capacité à créer rapidement des API REST et son excellente intégration avec \textbf{Neo4j} via \texttt{Spring Data Neo4j}. Neo4j a été préféré aux bases SQL traditionnelles car l'algorithme de matching nécessite de parcourir des relations complexes entre les compétences (ex: \textit{Candidat $\rightarrow$ MAITRISE $\rightarrow$ Java $\leftarrow$ REQUIERT $\leftarrow$ Offre}). Enfin, \textbf{Apache PDFBox} offre une solution Open Source puissante et sans coût d'API pour extraire le texte brut des PDF.
+
+\section{Implémentation par sprint}
+
+\subsection{Sprint 1 — Mise en place de l'Architecture et Extraction CV}
+Durant ce premier sprint, l'objectif était de valider la faisabilité technique :
+\begin{itemize}
+    \item Initialisation du projet Spring Boot avec les dépendances Maven.
+    \item Création du \texttt{PdfExtractionService} utilisant PDFBox.
+    \item \textbf{Résultat :} Le système est capable de lire un PDF, d'extraire le texte brut et d'isoler une liste de compétences grâce à un dictionnaire de mots-clés préétabli.
+\end{itemize}
+
+\subsection{Sprint 2 — Modélisation Neo4j et Développement du Graphe}
+Ce sprint s'est concentré sur la couche de données :
+\begin{itemize}
+    \item Définition des entités (\texttt{@Node}) : \texttt{Candidat}, \texttt{Offre}, \texttt{Skill}.
+    \item Création des relations (\texttt{@Relationship}) : \texttt{MAITRISE}, \texttt{REQUIERT}.
+    \item \textbf{Résultat :} Insertion réussie des compétences extraites du Sprint 1 sous forme de nœuds reliés au candidat dans la base Neo4j.
+\end{itemize}
+
+\subsection{Sprint 3 — Algorithme de Matching et Interface Web}
+Le dernier sprint a été consacré à l'assemblage et à l'UI :
+\begin{itemize}
+    \item Écriture de la requête Cypher personnalisée permettant de calculer le pourcentage de correspondance entre les skills d'une offre et ceux d'un candidat.
+    \item Développement de l'interface web (Dashboard Recruteur) pour afficher les profils classés.
+    \item \textbf{Résultat :} Produit fonctionnel de bout en bout (MVP).
+\end{itemize}
+
+\section{Interfaces graphiques principales}
+
+\subsection{Authentification et gestion des comptes}
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.8\textwidth]{images/auth.png}
+    \caption{Authentification et gestion des comptes}
+    \label{fig:auth}
+\end{figure}
+
+\subsection{Dashboard Candidat — Liste des offres et matching}
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.9\textwidth]{images/dashboard_candidat.png}
+    \caption{Dashboard Candidat — Liste des offres et matching}
+    \label{fig:dashboard_candidat}
+\end{figure}
+
+\subsection{Téléversement de CV et extraction automatique de compétences}
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.8\textwidth]{images/upload_cv.png}
+    \caption{Téléversement de CV et extraction automatique de compétences}
+    \label{fig:upload_cv}
+\end{figure}
+
+\subsection{Gestion manuelle des compétences}
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.8\textwidth]{images/gestion_competences.png}
+    \caption{Gestion manuelle des compétences}
+    \label{fig:gestion_competences}
+\end{figure}
+
+\subsection{Dashboard Recruteur — Publication d’offres}
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.9\textwidth]{images/dashboard_recruteur.png}
+    \caption{Dashboard Recruteur — Publication d’offres}
+    \label{fig:dashboard_recruteur}
+\end{figure}
+
+\subsection{Résultat du matching — Vue recruteur}
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.9\textwidth]{images/resultat_matching.png}
+    \caption{Résultat du matching — Vue recruteur}
+    \label{fig:resultat_matching}
+\end{figure}
+
+\subsection{Assistant IA intégré}
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.6\textwidth]{images/assistant_chat.png}
+    \caption{Assistant IA intégré (Ollama)}
+    \label{fig:assistant_chat}
+\end{figure}
+
+\subsection{Lien avec les cas d'utilisation}
+L'interface d'Upload répond directement au \textbf{CU 1 (Importer un CV)}. Le Dashboard Recruteur et le calcul du score valident techniquement et visuellement le \textbf{CU 2 (Effectuer un Matching)} défini lors de la phase de conception.
+
+\section{Tests et validation technique}
+
+\subsection{Plan de test}
+\begin{itemize}
+    \item \textbf{Tests Unitaires :} Validation isolée de la méthode d'extraction de texte (PDFBox) sur plusieurs formats de CV.
+    \item \textbf{Tests d'Intégration :} Vérification de la bonne communication entre Spring Boot et Neo4j (sauvegarde et récupération des nœuds).
+    \item \textbf{Tests Fonctionnels :} Simulation d'un parcours utilisateur complet (Upload $\rightarrow$ Extraction $\rightarrow$ Matching $\rightarrow$ Affichage).
+\end{itemize}
+
+\subsection{Résultats des tests}
+\begin{table}[h]
+\centering
+\begin{tabular}{|p{3cm}|p{4cm}|p{4cm}|p{2cm}|}
+\hline
+\textbf{Cas de Test} & \textbf{Résultat Attendu} & \textbf{Résultat Réel} & \textbf{Statut} \\
+\hline
+Upload CV PDF & Sauvegarde du fichier et succès HTTP 200 & Fichier sauvegardé, texte extrait & \textbf{Succès} \\
+\hline
+Upload fichier .docx & Rejet avec message d'erreur & Rejet immédiat (Format non supporté) & \textbf{Succès} \\
+\hline
+Matching Cypher & Score $> 0$ si au moins 1 skill en commun & Score calculé correctement & \textbf{Succès} \\
+\hline
+CV illisible (Image) & Message informant que le CV n'est pas "Text-based" & Extraction vide, erreur gérée & \textbf{Succès} \\
+\hline
+\end{tabular}
+\caption{Résultats des tests fonctionnels}
+\end{table}
+
+\subsection{Bugs identifiés et corrections apportées}
+Lors des tests, un bug majeur a été identifié concernant l'extraction de certains CV générés sous forme d'images (scans) intégrées dans un PDF. PDFBox ne gérant pas nativement l'OCR (Reconnaissance Optique de Caractères), l'extraction retournait une chaîne vide. \\
+\textbf{Correction apportée :} Ajout d'une vérification de la longueur du texte extrait. Si la longueur est trop courte, l'utilisateur est invité à uploader un "vrai" PDF textuel. L'intégration d'un outil OCR est repoussée aux futures évolutions.
+
+\section{Retour utilisateur et itérations}
+
+\subsection{Sessions de test avec utilisateurs réels}
+Le MVP a été présenté à un échantillon restreint d'utilisateurs (recruteurs et étudiants) pour valider l'ergonomie globale et la perception de la valeur de l'outil.
+
+\subsection{Feedback reçu et améliorations apportées}
+\begin{itemize}
+    \item \textbf{Feedback Recruteurs :} "L'interface est très claire, le pourcentage de matching aide vraiment à la décision. Cependant, on aimerait voir exactement \textit{quelles} compétences ont matché."
+    \item \textbf{Amélioration réalisée :} Ajout d'une liste visuelle (tags colorés) sur la carte du candidat pour indiquer précisément les compétences communes.
+    \item \textbf{Feedback Candidats :} Souhaitent pouvoir modifier manuellement les compétences détectées si l'extraction omet un mot-clé. (Fonctionnalité ajoutée dans le backlog pour une version ultérieure).
+\end{itemize}
+
+% =========================================================
+% CHAPITRE 8 : Viabilité Entrepreneuriale & Modèle d'Affaires
+% =========================================================
+\chapter{Viabilité Entrepreneuriale \& Modèle d'Affaires}
+
+Au-delà de la réussite technique du projet académique, ce chapitre étudie le potentiel de JobMatcher en tant que startup. Il analyse la rentabilité, le positionnement et les leviers de croissance de la plateforme sur le marché des HR Tech.
+
+\section{Business Model Canvas (BMC)}
+
+\subsection{Segments, Proposition de Valeur, Canaux}
+\begin{itemize}
+    \item \textbf{Segments clients :} Entreprises du secteur IT (ESN, startups, PME), Cabinets de recrutement spécialisés, Candidats en recherche active (Ingénieurs, Développeurs).
+    \item \textbf{Proposition de valeur :} Pour les recruteurs : "Divisez par deux votre temps de tri grâce au matching sémantique". Pour les candidats : "Ne soyez plus filtrés injustement, valorisez les relations entre vos compétences".
+    \item \textbf{Canaux de distribution :} Plateforme SaaS web, prospection B2B sur LinkedIn, salons professionnels RH, partenariats avec les écoles d'ingénieurs (ex: EMSI).
+\end{itemize}
+
+\subsection{Relations clients, Sources de revenus}
+\begin{itemize}
+    \item \textbf{Relations clients :} Service client automatisé pour les candidats (Self-service), Account Management dédié pour les comptes recruteurs Premium.
+    \item \textbf{Sources de revenus :} Abonnement SaaS mensuel pour les entreprises (Freemium pour essai, puis forfaits selon le volume d'offres/CV), modèle 100\% gratuit pour les candidats.
+\end{itemize}
+
+\subsection{Ressources, Activités, Partenaires clés, Structure de coûts}
+\begin{itemize}
+    \item \textbf{Activités clés :} Amélioration continue de l'algorithme Neo4j, hébergement, marketing digital B2B.
+    \item \textbf{Ressources clés :} Équipe technique (Devs, Data Engineers), infrastructure Cloud (AuraDB, AWS).
+    \item \textbf{Partenaires clés :} Écoles d'informatique (pour l'acquisition de profils juniors), intégrateurs SIRH.
+    \item \textbf{Structure de coûts :} Salaires R\&D, frais de serveurs Cloud (Neo4j très consommateur de RAM), marketing et acquisition client (CAC).
+\end{itemize}
+
+\section{Étude de faisabilité technique et humaine}
+
+\subsection{Ressources matérielles nécessaires}
+Le déploiement en production nécessite un cluster Cloud robuste. La base de données graphe (Neo4j) est gourmande en mémoire vive pour maintenir les parcours de graphe rapides. L'utilisation d'AuraDB (DBaaS) ou d'instances AWS EC2 optimisées mémoire est indispensable, avec un coût d'infrastructure estimé à 500\$/mois en phase de lancement.
+
+\subsection{Ressources humaines et coûts de développement}
+La V1 commerciale nécessite une équipe cœur de 3 personnes :
+\begin{itemize}
+    \item 1 Développeur Backend / Data Engineer (Optimisation Cypher / Spring).
+    \item 1 Développeur Frontend / UX.
+    \item 1 Profil "Business Developer" pour l'acquisition des premiers clients.
+\end{itemize}
+L'investissement initial en "sweat equity" (temps passé non rémunéré par les fondateurs) équivaut à un coût d'amorçage d'environ 600 000 MAD.
+
+\section{Étude de faisabilité commerciale}
+
+\subsection{Volume de production et transactions prévues}
+Nous ciblons l'acquisition de 20 entreprises clientes lors du premier semestre post-lancement, avec une moyenne de 3 offres publiées par mois et par entreprise. Côté candidat, l'objectif est d'atteindre 5 000 profils qualifiés inscrits la première année pour garantir un taux de matching attractif ("Effet réseau").
+
+\subsection{Coûts variables et chiffre d'affaires projeté}
+Le tarif moyen de l'abonnement "Pro" pour une entreprise sera fixé à 2 000 MAD/mois. \\
+CA projeté (Année 1) : $20 \text{ clients} \times 2 000 \text{ MAD} \times 12 \text{ mois} \approx 480 000 \text{ MAD}$. Les coûts variables restent très faibles (bande passante), confirmant un modèle SaaS très scalable.
+
+\section{Étude de faisabilité financière}
+
+\subsection{Seuil de rentabilité (Break-even)}
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.8\textwidth]{images/seuil_rentabilite.png}
+    \caption{Graphique du seuil de rentabilité}
+    \label{fig:rentabilite}
+\end{figure}
+Considérant des charges fixes évaluées à 20 000 MAD/mois (serveurs, licences, petits frais de structure - hors salaires fondateurs), le seuil de rentabilité brut est atteint dès la signature de 10 clients réguliers. La rentabilité nette (incluant les salaires) sera atteinte vers le mois 18.
+
+\subsection{Projections et analyse de croissance}
+\begin{itemize}
+    \item \textbf{S1 / S2 (Année 1) :} Phase d'acquisition et "Early Adopters". Focus sur l'intégration des retours utilisateurs.
+    \item \textbf{Année 2 :} Phase de monétisation forte. L'objectif est d'atteindre 100 clients récurrents.
+    \item \textbf{Taux de Churn (Désabonnement) :} Attendu sous la barre des 5\%/mois, le recrutement étant un besoin structurel continu pour les ESN.
+\end{itemize}
+
+\section{Stratégie marketing et lancement}
+
+\subsection{Segmentation, ciblage, positionnement}
+Le ciblage se concentre initialement sur les ESN (Entreprises de Services du Numérique) marocaines cherchant désespérément des développeurs. Le positionnement est clair : une plateforme "Tech for Tech", par des informaticiens pour des informaticiens, capable de comprendre la différence entre "Java" et "JavaScript", contrairement aux plateformes généralistes.
+
+\subsection{Mix marketing (Les 4 P)}
+\begin{itemize}
+    \item \textbf{Produit :} Algorithme précis, UI claire, extraction de CV sans friction.
+    \item \textbf{Prix :} Stratégie de pénétration avec 1 mois gratuit, puis tarif agressif par rapport aux mastodontes comme LinkedIn Recruiter.
+    \item \textbf{Place (Distribution) :} 100\% en ligne (SaaS).
+    \item \textbf{Promotion :} Inbound marketing via des articles techniques (ex: "Comment l'IA révolutionne le recrutement IT"), démarchage ciblé sur LinkedIn, participation aux salons de l'emploi technologique.
+\end{itemize}
+
+\section{Aspects juridiques et réglementaires}
+
+\subsection{Statut juridique envisagé}
+La création d'une SARL (Société à Responsabilité Limitée) au Maroc est le statut le plus adapté pour isoler le patrimoine personnel des fondateurs.
+
+\subsection{Conformité et protection des données (RGPD / CNDP)}
+Le traitement de données personnelles (CV, adresses) est le cœur du métier. Le système doit respecter les normes de la \textbf{CNDP} au Maroc, et le \textbf{RGPD} si des données de citoyens européens sont traitées :
+\begin{itemize}
+    \item Consentement explicite lors de l'upload du CV.
+    \item Fonction "Supprimer mon compte et mes données" (Droit à l'oubli).
+    \item Purge automatique des comptes inactifs depuis plus de 2 ans.
+\end{itemize}
+
+\subsection{Protection intellectuelle}
+Le nom de marque "JobMatcher" devra être déposé à l'OMPIC. Le code source de l'algorithme (requêtes Cypher) relève du secret industriel et du droit d'auteur.
+
+\section{Scalabilité et roadmap produit}
+
+\subsection{Roadmap V1 $\rightarrow$ V2 $\rightarrow$ V3}
+\begin{itemize}
+    \item \textbf{V1 (Actuelle - MVP) :} Extraction PDF, Graphe de compétences, Scoring basique.
+    \item \textbf{V2 (Année 1) :} Ajout de l'IA (NLP) pour affiner l'extraction, API pour intégration SIRH.
+    \item \textbf{V3 (Année 2) :} Génération automatique de tests techniques selon les compétences requises.
+\end{itemize}
+
+\subsection{Marchés à conquérir et leviers de croissance}
+Une fois le marché IT validé au Maroc, la technologie de graphe s'applique parfaitement à d'autres secteurs (Ingénierie, Santé). L'expansion internationale (Afrique francophone, Europe) est facilitée par la nature Cloud du logiciel.
+
+% =========================================================
+% CONCLUSION GÉNÉRALE
+% =========================================================
+\chapter*{Conclusion Générale}
+\addcontentsline{toc}{chapter}{Conclusion Générale}
+
+Le projet JobMatcher représente l'aboutissement d'une réflexion approfondie sur les limites des systèmes de recrutement actuels et l'application concrète des bases de données orientées graphes pour résoudre ces enjeux.
+
+\section*{Bilan technique}
+Sur le plan technique, les objectifs fixés ont été atteints. L'intégration de \textbf{Spring Boot} avec \textbf{Neo4j} a permis de modéliser avec succès un réseau de compétences complexe. L'utilisation d'Apache \textbf{PDFBox} pour l'extraction des données a prouvé son efficacité sur des CV textuels standards. La principale limitation technique rencontrée concerne le traitement des CV scannés (images), pour lesquels l'implémentation d'une solution OCR (Reconnaissance Optique de Caractères) reste une évolution nécessaire.
+
+\section*{Bilan entrepreneurial}
+Sur le plan entrepreneurial, l'étude de faisabilité a confirmé la viabilité du projet. La proposition de valeur (réduction du temps de tri de 50\% et meilleure compréhension des proximités technologiques) répond à un "pain point" critique et coûteux pour les entreprises du secteur IT. Le modèle économique SaaS retenu garantit une bonne scalabilité avec des coûts marginaux très faibles.
+
+\section*{Bilan managérial}
+Le pilotage du projet s'est déroulé de manière fluide grâce à l'adoption de la méthodologie Agile (Scrum). Le découpage en sprints de deux semaines a permis de livrer rapidement un MVP fonctionnel. Les risques majeurs (notamment l'incertitude liée à l'extraction PDF) ont été mitigés efficacement grâce à des tests précoces et des solutions de contournement (validation manuelle).
+
+\section*{Difficultés rencontrées et leçons apprises}
+La difficulté majeure a résidé dans l'apprentissage et l'optimisation du langage de requête \textbf{Cypher} propre à Neo4j. Modéliser un algorithme de matching performant qui pondère correctement chaque relation a exigé de multiples itérations. Ce projet nous a appris l'importance cruciale de la qualité de la donnée en entrée : un graphe puissant est inutile si l'extraction initiale (le parsing du CV) est défectueuse.
+
+\section*{Perspectives futures}
+La plateforme JobMatcher, dans sa version MVP, pose des bases solides pour de futures évolutions. La roadmap (V2/V3) prévoit l'intégration de modèles de Traitement du Langage Naturel (NLP) pour une compréhension sémantique de la syntaxe des CV, ainsi que le développement d'APIs publiques pour s'interfacer avec les SIRH existants des grandes entreprises.
+
+% =========================================================
+% BIBLIOGRAPHIE & NÉTOGRAPHIE
+% =========================================================
+\chapter*{Bibliographie \& Nétographie}
+\addcontentsline{toc}{chapter}{Bibliographie \& Nétographie}
+
+\section*{Références techniques et documentaires}
+\begin{itemize}
+    \item \textbf{Neo4j Documentation Team.} \textit{The Neo4j Operations Manual v5}. Consulté sur : \url{https://neo4j.com/docs/}
+    \item \textbf{Spring Framework.} \textit{Spring Data Neo4j Reference Documentation}. Consulté sur : \url{https://docs.spring.io/spring-data/neo4j/reference/}
+    \item \textbf{Apache Software Foundation.} \textit{Apache PDFBox API Documentation}. Consulté sur : \url{https://pdfbox.apache.org/}
+\end{itemize}
+
+\section*{Références académiques et entrepreneuriales}
+\begin{itemize}
+    \item \textbf{Osterwalder, A., \& Pigneur, Y.} (2010). \textit{Business Model Generation: A Handbook for Visionaries, Game Changers, and Challengers}. John Wiley \& Sons.
+    \item \textbf{Ries, E.} (2011). \textit{The Lean Startup: How Today's Entrepreneurs Use Continuous Innovation to Create Radically Successful Businesses}. Crown Business.
+\end{itemize}
+
+\section*{Articles et études sectorielles}
+\begin{itemize}
+    \item \textbf{Gartner} (2023). \textit{Hype Cycle for Human Capital Management Technology}. [Consulté le : 10 Mars 2024]
+    \item \textbf{McKinsey \& Company} (2022). \textit{The impact of AI on HR and Talent Acquisition}. Consulté sur : \url{https://www.mckinsey.com/} [Consulté le : 15 Avril 2024]
+\end{itemize}
+
+% =========================================================
+% ANNEXES
+% =========================================================
+\appendix
+\chapter*{Annexes}
+\addcontentsline{toc}{chapter}{Annexes}
+
+\section*{Annexe A : Guide d'entretien et questionnaire de validation terrain}
+\textit{(Insérer ici les questions posées aux recruteurs et aux candidats lors de la phase d'étude de marché.)}
+
+\section*{Annexe B : Résultats bruts Design Thinking (TP2 complet)}
+\textit{(Insérer ici les cartes d'empathie, les post-its virtuels d'idéation et les parcours utilisateurs du TP2.)}
+
+\section*{Annexe C : Données financières détaillées}
+\textit{(Insérer ici les tableaux Excel du prévisionnel financier, bilan, compte de résultat sur 3 ans.)}
+
+\section*{Annexe D : Extraits de code source significatifs}
+\textbf{D.1 : Requête Cypher de Matching (Neo4jRepository)}
+\begin{verbatim}
+@Query("MATCH (o:Offre {id: $offreId})-[:REQUIERT]->(s:Skill) " +
+       "MATCH (c:Candidat)-[:MAITRISE]->(s) " +
+       "RETURN c, count(s) as score " +
+       "ORDER BY score DESC LIMIT 10")
+List<CandidatScore> findBestMatches(@Param("offreId") Long offreId);
+\end{verbatim}
+
+\textbf{D.2 : Extraction de texte (PDFBox)}
+\begin{verbatim}
+try (PDDocument document = PDDocument.load(file.getInputStream())) {
+    PDFTextStripper stripper = new PDFTextStripper();
+    String text = stripper.getText(document);
+    return extractSkillsFromText(text);
+}
+\end{verbatim}
+
+\section*{Annexe E : Manuel utilisateur / Guide d'installation}
+\textit{(Insérer les instructions de déploiement Docker, la configuration du application.properties pour Neo4j et les commandes Maven.)}
+
+\section*{Annexe F : Compte-rendus de réunions de suivi de projet}
+\textit{(Insérer les notes des principales réunions avec l'encadrant et les décisions prises à l'issue de chaque Sprint.)}
+
+\end{document}
