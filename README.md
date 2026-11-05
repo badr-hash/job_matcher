@@ -24,7 +24,7 @@ Java 25 · Spring Boot · Neo4j · Apache PDFBox · HTML/CSS/JavaScript · Maven
 
 ## Exécution locale
 
-Le projet utilise Java 25 et une instance Neo4j locale. La configuration se trouve dans `JobMatcher/src/main/resources/application.properties`. Remplacez les identifiants existants par des identifiants locaux et ne les publiez pas. Depuis le dossier `JobMatcher`, la commande Maven prévue est :
+Le projet utilise Java 25 et une instance Neo4j locale. La configuration se trouve dans `JobMatcher/src/main/resources/application.properties`. Définissez la variable d’environnement `NEO4J_PASSWORD` avec le mot de passe de votre instance ; `NEO4J_URI` et `NEO4J_USERNAME` sont facultatifs (par défaut : `bolt://localhost:7687` et `neo4j`). Ne publiez jamais ces valeurs. Le mot de passe anciennement exposé doit être changé : il reste accessible dans l’historique Git. Depuis le dossier `JobMatcher`, la commande Maven prévue est :
 
 ```bash
 mvn spring-boot:run
